@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import * as routes from '@/lib/routes'
  
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
@@ -9,7 +10,7 @@ export function middleware(request: NextRequest) {
   const handle = request.cookies.get('handle')
 
   if (!accessJwt || !refreshJwt || !did || !handle) {
-    return NextResponse.redirect(new URL('/auth', request.url))
+    return NextResponse.redirect(new URL(routes.auth, request.url))
   }
 
   return NextResponse.next()

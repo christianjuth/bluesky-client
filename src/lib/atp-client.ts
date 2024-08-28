@@ -43,35 +43,76 @@ export const getSession = async () => {
     }
   }
 
-  const {
-    accessJwt,
-    refreshJwt,
-    did,
-    handle,
-  } = sessionSchema.parse({
-    accessJwt: cookies().get('accessJwt')?.value,
-    refreshJwt: cookies().get('refreshJwt')?.value,
-    did: cookies().get('did')?.value,
-    handle: cookies().get('handle')?.value,
-  })
+  try {
+    const {
+      accessJwt,
+      refreshJwt,
+      did,
+      handle,
+    } = sessionSchema.parse({
+      accessJwt: cookies().get('accessJwt')?.value,
+      refreshJwt: cookies().get('refreshJwt')?.value,
+      did: cookies().get('did')?.value,
+      handle: cookies().get('handle')?.value,
+    })
 
-  await agent.resumeSession({
-    accessJwt,
-    refreshJwt,
-    did,
-    handle,
-    active: true,
-  })
+    await agent.resumeSession({
+      accessJwt,
+      refreshJwt,
+      did,
+      handle,
+      active: true,
+    })
 
-  sessionCache = {
-    accessJwt,
-    refreshJwt,
-    did,
-    handle,
+    sessionCache = {
+      accessJwt,
+      refreshJwt,
+      did,
+      handle,
+    }
+
+    return {
+      did,
+      handle,
+    }
+  } catch (e) {
+    console.log(e)
+    return null;
+  }
+}
+
+const likesSchema = z.array(z.object({
+  value: z.object({
+    subject: z.object({
+      uri: z.string()
+    })
+  })
+}));
+
+export const getMyLikedPosts = async () => {
+  const session = await getSession();
+  const userId = session?.handle;
+
+  if (!userId) {
+    return []
   }
 
-  return {
-    did,
-    handle,
-  }
+  const likes = await agent.com.atproto.repo.listRecords({
+    repo: userId,
+    collection: "app.bsky.feed.like",
+    limit: 10,
+  })
+
+  const uris = likesSchema.parse(likes.data.records).map(({ value }) => value.subject.uri);
+
+  const posts = await agent.getPosts({
+    uris,
+  })
+
+  return posts
+}
+
+export const userIsMyself = async (userId: string) => {
+  const session = await getSession();
+  return session?.handle === userId || session?.did === userId;
 }

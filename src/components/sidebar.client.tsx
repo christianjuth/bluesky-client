@@ -3,38 +3,49 @@
 import { Button } from '@/components/ui/button'
 import Link from "next/link"
 import { usePathname } from "next/navigation";
+import * as routes from "@/lib/routes"
 
-const getSidebarLinks = (userDid: string) => [
+import { HomeOutlined, PersonOutlined } from "@/components/icons"
+
+const getSidebarLinks = (userId: string) => [
   {
-    href: "/",
+    href: routes.home,
     text: "Home",
+    icon: HomeOutlined
   },
   {
-    href: `/profile/${userDid}`,
+    href: routes.user(userId),
     text: "Profile",
+    icon: PersonOutlined
   },
 ]
-  
+
+const matchPaths = (target: string, current: string) => {
+  if (target === routes.home) {
+    return current === target
+  }
+
+  return current.indexOf(target) === 0
+}
 
 export function Sidebar({
-  userDid
+  userId
 }: {
-  userDid: string;
+  userId: string;
 }) {
   const pathname = usePathname();
 
   return (
     <div className="flex flex-col gap-2">
-      {getSidebarLinks(userDid).map(({ href, text }) => (
+      {getSidebarLinks(userId).map(({ href, text, icon: Icon }) => (
         <Button 
           key={href}
           asChild
-          variant={pathname === href ? "default" : "ghost"}
+          variant={matchPaths(href, pathname) ? "default" : "ghost"}
           className="justify-start"
         >
-          <Link
-            href={href}
-          >
+          <Link href={href}>
+            <Icon className="mr-1.5 text-lg" />
             {text}
           </Link>
         </Button>
