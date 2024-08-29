@@ -1,6 +1,9 @@
 import { AtpAgent } from '@atproto/api'
+import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import z from 'zod'
+import * as routes from '@/lib/routes'
+import { PostView } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
 /**
  * Disable caching for now to prevent Next.js from
@@ -9,11 +12,12 @@ import z from 'zod'
  * but that should be handled per request.
  */
 export const agent = new AtpAgent({
-  service: 'https://bsky.social',
+  // service: 'https://bsky.social',
+  service: 'https://public.api.bsky.app',
   fetch: (input, init) => fetch(input, {
     ...init,
     cache: "no-store"
-  }),
+  })
 })
 
 const sessionSchema = z.object({
@@ -81,6 +85,16 @@ export const getSession = async () => {
   }
 }
 
+export const requireSession = async () => {
+  const session = await getSession();
+
+  if (!session) {
+    redirect(routes.auth)
+  }
+
+  return session;
+}
+
 const likesSchema = z.array(z.object({
   value: z.object({
     subject: z.object({
@@ -94,7 +108,7 @@ export const getMyLikedPosts = async () => {
   const userId = session?.handle;
 
   if (!userId) {
-    return []
+    return null
   }
 
   const likes = await agent.com.atproto.repo.listRecords({
@@ -115,4 +129,41 @@ export const getMyLikedPosts = async () => {
 export const userIsMyself = async (userId: string) => {
   const session = await getSession();
   return session?.handle === userId || session?.did === userId;
+}
+
+export const randomTimeIntervalStabalizedString = (stringRotationSeconds: number, maxStringLength: number) => {
+  const now = new Date();
+  const interval = Math.floor(now.getTime() / (stringRotationSeconds * 1000));
+
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  let index = 0
+
+  let output = ""
+
+  let i = 0
+
+  for (const number of interval.toString()) {
+    index += +number
+    index = index % characters.length
+    output += characters[index]
+    i++
+    if (i >= maxStringLength) {
+      break;
+    }
+  }
+
+  return output
+}
+
+const REVALIDATE_DISCOVER_INTERVAL = 60
+export const getDiscoveryFeed = async () => {
+  const randomString = randomTimeIntervalStabalizedString(REVALIDATE_DISCOVER_INTERVAL,3)
+  const res = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=${randomString}`, {
+    next: {
+      revalidate: REVALIDATE_DISCOVER_INTERVAL
+    }
+  })
+  const data = await res.json()
+  return data as { posts: PostView[], cursor: string }
 }

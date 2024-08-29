@@ -1,0 +1,49 @@
+import { FormItem } from '@/components/formitem'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
+import { agent } from '@/lib/atp-client'
+import { zfd } from "zod-form-data";
+import { cookies } from 'next/headers'
+
+const loginSchema = zfd.formData({
+  username: zfd.text(),
+  password: zfd.text()
+})
+
+export async function login(formData: FormData) {
+'use server'
+
+  const {
+    username,
+    password,
+  } = loginSchema.parse(formData)
+
+  const { data } = await agent.login({
+    identifier: username,
+    password: password
+  })
+
+  const { accessJwt, refreshJwt, did, handle } = data
+
+  cookies().set('accessJwt', accessJwt)
+  cookies().set('refreshJwt', refreshJwt)
+  cookies().set('did', did)
+  cookies().set('handle', handle)
+}
+
+export function AuthForm() {
+  return (
+    <form action={login} className="space-y-2">
+      <FormItem label="Username">
+        {({ id }) => <Input name="username" id={id} />}
+      </FormItem>
+
+      <FormItem label="Password">
+        {({ id }) => <Input name="password" type="password" id={id} />}
+      </FormItem>
+
+      <Button type="submit">Login</Button>
+    </form>
+  )
+}

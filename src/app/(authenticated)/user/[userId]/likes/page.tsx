@@ -1,17 +1,6 @@
-import { agent, getSession, getMyLikedPosts, userIsMyself } from "@/lib/atp-client";
-
+import { getMyLikedPosts, userIsMyself } from "@/lib/atp-client";
 import { Post } from "@/components/post.server"
 import { ProfileNavbar } from '../profile-navbar'
-
-import z from 'zod'
-
-const likesSchema = z.array(z.object({
-  value: z.object({
-    subject: z.object({
-      uri: z.string()
-    })
-  })
-}));
 
 export default async function Posts({
   params,
@@ -20,16 +9,15 @@ export default async function Posts({
 }) {
   const userId = decodeURIComponent(params.userId)
 
-  const posts = getMyLikedPosts();
+  const posts = await getMyLikedPosts();
 
-  
-
+  const isMyself = await userIsMyself(userId);
 
   return (
     <>
       <ProfileNavbar activeLink="likes" userId={userId} isMyself={isMyself}/>
       <div className="divide-y border-t">
-        {posts.data.posts.map((post) => (
+        {posts?.data.posts.map((post) => (
           <Post key={post.uri} post={post} />
         ))}
       </div>

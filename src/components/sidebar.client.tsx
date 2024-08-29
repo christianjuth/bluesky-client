@@ -7,17 +7,25 @@ import * as routes from "@/lib/routes"
 
 import { HomeOutlined, PersonOutlined } from "@/components/icons"
 
-const getSidebarLinks = (userId: string) => [
+const getSidebarLinks = (userId?: string) => [
   {
     href: routes.home,
     text: "Home",
     icon: HomeOutlined
   },
-  {
-    href: routes.user(userId),
-    text: "Profile",
-    icon: PersonOutlined
-  },
+  ...(userId ? [
+    {
+      href: routes.user(userId),
+      text: "Profile",
+      icon: PersonOutlined
+    },
+  ] : [
+    {
+      href: routes.auth,
+      text: "Login",
+      icon: PersonOutlined
+    }
+  ])
 ]
 
 const matchPaths = (target: string, current: string) => {
@@ -31,7 +39,7 @@ const matchPaths = (target: string, current: string) => {
 export function Sidebar({
   userId
 }: {
-  userId: string;
+  userId?: string;
 }) {
   const pathname = usePathname();
 
