@@ -1,4 +1,4 @@
-import { agent } from '@/lib/atp-client'
+import { publicAgent } from '@/lib/atp-client'
 import Image from 'next/image'
 import dayjs from 'dayjs'
 
@@ -11,7 +11,7 @@ export default async function Profile({
 }) {
   const userId = decodeURIComponent(params.userId)
   
-  const { data } = await agent.getProfile({
+  const { data } = await publicAgent.getProfile({
     actor: userId,
   })
 
@@ -48,7 +48,7 @@ export default async function Profile({
             </div>
           )}
 
-          <p className="p-4">{data.description}</p>
+          {data.description && <p className="p-4">{data.description}</p>}
 
           {/* Stats */}
           <div className="p-4 grid grid-cols-2 gap-y-4 gap-x-10">

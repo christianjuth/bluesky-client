@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { agent } from '@/lib/atp-client'
 import { zfd } from "zod-form-data";
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation';
 
 const loginSchema = zfd.formData({
   username: zfd.text(),
@@ -30,6 +31,8 @@ export async function login(formData: FormData) {
   cookies().set('refreshJwt', refreshJwt)
   cookies().set('did', did)
   cookies().set('handle', handle)
+
+  redirect('/')
 }
 
 export function AuthForm() {

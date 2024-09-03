@@ -12,7 +12,15 @@ import { PostView } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
  * but that should be handled per request.
  */
 export const agent = new AtpAgent({
-  // service: 'https://bsky.social',
+  service: 'https://bsky.social',
+  // service: 'https://public.api.bsky.app',
+  fetch: (input, init) => fetch(input, {
+    ...init,
+    cache: "no-store"
+  })
+})
+
+export const publicAgent = new AtpAgent({
   service: 'https://public.api.bsky.app',
   fetch: (input, init) => fetch(input, {
     ...init,

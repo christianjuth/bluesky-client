@@ -1,4 +1,4 @@
-import { agent, getSession } from "@/lib/atp-client";
+import { agent, publicAgent, getSession } from "@/lib/atp-client";
 
 import { Post } from "@/components/post.server"
 import { ProfileNavbar } from '../profile-navbar'
@@ -9,14 +9,15 @@ export default async function Posts({
   params: { userId: string };
 }) {
   const userId = decodeURIComponent(params.userId)
+
+  const session = await getSession();
   
-  const posts = await agent.getAuthorFeed({
+  const posts = await (session ? agent : publicAgent).getAuthorFeed({
     actor: userId,
     limit: 20,
     // filter: 'replies'
   });
 
-  const session = await getSession();
   const isMyself = session?.handle === userId;
 
   return (
