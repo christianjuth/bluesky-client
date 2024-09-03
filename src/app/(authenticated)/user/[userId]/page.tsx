@@ -11,7 +11,7 @@ export default async function Posts({
   
   const { data } = await agent.getAuthorFeed({
     actor: userId,
-    limit: 10,
+    limit: 20,
   });
 
   const session = await getSession();
@@ -21,8 +21,8 @@ export default async function Posts({
     <>
       <ProfileNavbar activeLink="" userId={userId} isMyself={isMyself} />
       <div className="divide-y border-t">
-        {data.feed.map(({ post, reply }) => (
-          <Post key={post.uri} post={post} reply={reply} />
+        {data.feed.map(({ post, reply, reason }) => (
+          <Post key={post.uri} post={post} reply={reply} reason={reason} />
         ))}
       </div>
     </>

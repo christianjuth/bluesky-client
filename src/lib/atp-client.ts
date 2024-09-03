@@ -80,7 +80,6 @@ export const getSession = async () => {
       handle,
     }
   } catch (e) {
-    console.log(e)
     return null;
   }
 }

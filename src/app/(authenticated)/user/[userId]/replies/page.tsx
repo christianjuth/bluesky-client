@@ -13,7 +13,7 @@ export default async function Posts({
   const posts = await agent.getAuthorFeed({
     actor: userId,
     limit: 10,
-    filter: 'posts_with_replies'
+    // filter: 'replies'
   });
 
   const session = await getSession();
@@ -23,8 +23,8 @@ export default async function Posts({
     <>
       <ProfileNavbar activeLink="replies" userId={userId} isMyself={isMyself}/>
       <div className="divide-y border-t">
-        {posts.data.feed.map(({ post }) => 
-          <Post key={post.uri} post={post} />
+        {posts.data.feed.map(({ post, reply }) => 
+          reply && <Post key={post.uri} post={post} reply={reply} />
         )}
       </div>
     </>
