@@ -1,5 +1,5 @@
 import { getSession } from "@/lib/atp-client";
-import { Sidebar } from "@/components/sidebar.client"
+import { BottomTabNavigator, Sidebar } from "@/components/nav.client"
 import Link from "next/link";
 import { ModeToggle } from '@/components/theme-mode-toggle'
 import * as routes from "@/lib/routes";
@@ -21,13 +21,15 @@ export default async function Layout({ children }: {
 
       <div className="h-14" />
 
-      <aside className="fixed left-0 bottom-0 w-40 border-r top-14 p-4">
+      <aside className="fixed left-0 bottom-0 w-40 border-r top-14 p-4 max-md:hidden">
         <Sidebar userId={user?.handle} />
       </aside>
 
-      <main className="w-full mx-auto pr-4 pl-44 max-w-5xl">
+      <main className="w-full mx-auto pr-4 md:pl-44 max-w-5xl max-md:pl-4">
         {children}
       </main>
+
+      <BottomTabNavigator />
     </div>
   );
 }

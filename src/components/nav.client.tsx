@@ -61,3 +61,27 @@ export function Sidebar({
     </div>
   )
 }
+
+export function BottomTabNavigator({
+  userId
+}: {
+  userId?: string;
+}) {
+  const pathname = usePathname();
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 h-14 border-t flex flex-row items-center justify-between px-4 bg-background/70 z-20 backdrop-blur md:hidden">
+      {getSidebarLinks(userId).map(({ href, icon: Icon }) => (
+        <Button 
+          key={href}
+          asChild
+          variant={matchPaths(href, pathname) ? "default" : "ghost"}
+        >
+          <Link href={href}>
+            <Icon className="text-lg" />
+          </Link>
+        </Button>
+      ))}
+    </div>
+  )
+}
