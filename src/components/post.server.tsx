@@ -6,8 +6,9 @@ import { getSession, agent } from "@/lib/atp-client";
 import * as routes from "@/lib/routes";
 import { RelativeTime } from './relative-time.client'
 import { cn } from '@/lib/utils'
+import { abbriviateNumber } from '@/lib/format'
 
-import { Repost } from '@/components/icons'
+import { Repost, ReplyOutlined } from '@/components/icons'
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +23,15 @@ const imagesSchema = z.array(z.object({
     height: z.number(),
     width: z.number(),
   })
-}))
+}).strip())
+
+function parseImages(images: unknown): z.infer<typeof imagesSchema> | undefined {
+  try {
+    return imagesSchema.parse(images)
+  } catch (e) {
+    return undefined
+  }
+}
 
 const reasonRepost = z.object({
   by: z.object({
@@ -30,13 +39,13 @@ const reasonRepost = z.object({
     handle: z.string(),
     displayName: z.string(),
     avatar: z.string(),
-    associated: z.object({}),
-    labels: z.array(z.unknown()),
-    createdAt: z.string(),
+    // associated: z.object({}),
+    // labels: z.array(z.unknown()),
+    // createdAt: z.string(),
   }),
 }).strip()
 
-function getReasonRepost(reason: ReasonRepost | { [k: string]: unknown, $type: string } | undefined) {
+function parseReasonRepost(reason: ReasonRepost | { [k: string]: unknown, $type: string } | undefined) {
   try {
     return reasonRepost.parse(reason)
   } catch (e) {
@@ -138,14 +147,9 @@ export async function Post({
 
   const createdAt = 'createdAt' in post.record && typeof post.record.createdAt === 'string' ? post.record.createdAt : undefined;
 
-  let images: z.infer<typeof imagesSchema> | undefined = undefined;
+  const images = parseImages(post.embed?.images);
 
-  try {
-    images = imagesSchema.parse(post.embed?.images ?? []);
-  } catch (e) {
-  }
-
-  const reasonRepost = getReasonRepost(reason);
+  const reasonRepost = parseReasonRepost(reason);
 
   return (
     <div className="py-4 px-2 space-y-2 relative hover:bg-accent/30">
@@ -173,13 +177,14 @@ export async function Post({
 
         {images && <Images images={images} />}
 
-        <div className='flex flex-row space-x-6 text-sm'>
+        <div className='flex flex-row items-center space-x-6 text-sm'>
           <button className='flex items-center space-x-1'>
             {iLikedPost ? <IoIosHeart /> : <IoIosHeartEmpty />}
-            <div>{post.likeCount}</div>
+            {post.likeCount && <div>{abbriviateNumber(post.likeCount)}</div>}
           </button>
-          <Link href={`/post/${post.cid}`}>
-            Reply
+          <Link href={`/post/${post.cid}`} className="flex items-center space-x-1">
+            <ReplyOutlined />
+            {post.replyCount && <div>{abbriviateNumber(post.replyCount)}</div>}
           </Link>
         </div>
       </div>
