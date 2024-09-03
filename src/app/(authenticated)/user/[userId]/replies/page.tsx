@@ -12,7 +12,7 @@ export default async function Posts({
   
   const posts = await agent.getAuthorFeed({
     actor: userId,
-    limit: 10,
+    limit: 20,
     // filter: 'replies'
   });
 

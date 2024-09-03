@@ -9,7 +9,7 @@ export default async function Posts({
 }) {
   const userId = decodeURIComponent(params.userId)
 
-  const posts = await getMyLikedPosts();
+  const posts = await getMyLikedPosts({ limit: 20 });
 
   const isMyself = await userIsMyself(userId);
 

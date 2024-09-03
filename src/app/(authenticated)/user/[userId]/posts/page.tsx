@@ -14,7 +14,6 @@ export default async function Posts({
     actor: userId,
     limit: 20,
     filter: "posts_no_replies"
-    // filter: "posts_and_author_threads"
   });
 
   const session = await getSession();

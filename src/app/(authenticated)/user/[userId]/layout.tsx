@@ -40,13 +40,15 @@ export default async function Profile({
       </div>
 
       {/* Sidebar */}
-      <div className="sticky top-14 h-min p-4 max-lg:hidden">
+      <div className="sticky top-14 h-min p-4 max-lg:hidden w-80">
         <div className="border rounded-xl ">
           {banner && (
             <div className="relative aspect-[2.5] w-full">
               <Image src={banner} alt="Profile banner" layout="fill" objectFit="cover" className="rounded-tr-xl rounded-tl-xl" />
             </div>
           )}
+
+          <p className="p-4">{data.description}</p>
 
           {/* Stats */}
           <div className="p-4 grid grid-cols-2 gap-y-4 gap-x-10">

@@ -102,7 +102,7 @@ const likesSchema = z.array(z.object({
   })
 }));
 
-export const getMyLikedPosts = async () => {
+export const getMyLikedPosts = async (params: { limit?: number }) => {
   const session = await getSession();
   const userId = session?.handle;
 
@@ -111,9 +111,9 @@ export const getMyLikedPosts = async () => {
   }
 
   const likes = await agent.com.atproto.repo.listRecords({
+    ...params,
     repo: userId,
     collection: "app.bsky.feed.like",
-    limit: 10,
   })
 
   const uris = likesSchema.parse(likes.data.records).map(({ value }) => value.subject.uri);

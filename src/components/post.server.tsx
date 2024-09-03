@@ -148,7 +148,7 @@ export async function Post({
   const reasonRepost = getReasonRepost(reason);
 
   return (
-    <div className="py-4 px-2 space-y-2 relative hover:bg-gray-200/20">
+    <div className="py-4 px-2 space-y-2 relative hover:bg-accent/30">
       {reasonRepost && (
         <span className="text-sm ml-8 -mb-1 flex items-center"><Repost className="text-lg mr-0.5"/> Reposted by {reasonRepost.by.displayName}</span>
       )}
