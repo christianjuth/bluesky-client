@@ -1,5 +1,3 @@
-import 'server-only'
-
 import { PostView, ReasonRepost, ReplyRef } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs';
 import * as routes from "@/lib/routes";
@@ -110,7 +108,7 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
   }
 }
 
-export async function Post({
+export function Post({
   post,
   reply,
   reason,
