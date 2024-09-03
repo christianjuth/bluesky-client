@@ -2,7 +2,6 @@ import 'server-only'
 
 import { PostView, ReasonRepost, ReplyRef } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs';
-import { getSession, agent } from "@/lib/atp-client";
 import * as routes from "@/lib/routes";
 import { RelativeTime } from './relative-time.client'
 import { cn } from '@/lib/utils'
@@ -123,17 +122,6 @@ export async function Post({
     $type: string
   },
 }) {
-  const user = await getSession()
-
-  let iLikedPost = false
-
-  if (user) {
-    const likes = await agent.getLikes({
-      uri: post.uri,
-    })
-    iLikedPost = likes.data.likes.some((like) => like.actor.did === user.did)
-  }
-
   let text = "error";
 
   if ("text" in post.record && typeof post.record.text === "string") {
@@ -150,6 +138,8 @@ export async function Post({
   const images = parseImages(post.embed?.images);
 
   const reasonRepost = parseReasonRepost(reason);
+
+  const id = post.uri.split('/').pop();
 
   return (
     <div className="py-4 px-2 space-y-2 relative hover:bg-accent/30">
@@ -179,12 +169,12 @@ export async function Post({
 
         <div className='flex flex-row items-center space-x-6 text-sm'>
           <button className='flex items-center space-x-1'>
-            {iLikedPost ? <IoIosHeart /> : <IoIosHeartEmpty />}
+            {post.viewer?.like ? <IoIosHeart /> : <IoIosHeartEmpty />}
             {post.likeCount && <div>{abbriviateNumber(post.likeCount)}</div>}
           </button>
-          <Link href={`/post/${post.cid}`} className="flex items-center space-x-1">
+          <Link href={`/users/${post.author.handle}/posts/${id}`} className="flex items-center space-x-1">
             <ReplyOutlined />
-            {post.replyCount && <div>{abbriviateNumber(post.replyCount)}</div>}
+            {post.replyCount !== undefined && <div>{abbriviateNumber(post.replyCount)}</div>}
           </Link>
         </div>
       </div>

@@ -11,17 +11,19 @@ export function RelativeTime({
 }: {
   time: string
 }) {
-  const [relativeTime, setRelativeTime] = useState<string>(dayjs(time).fromNow());
+  const [relativeTime, setRelativeTime] = useState<string>(dayjs(time).format("MMM D, YYYY h:mma"));
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRelativeTime(dayjs(time).fromNow());
-    }, 1000);
+    const updateTime = () => setRelativeTime(dayjs(time).fromNow());
+
+    const interval = setInterval(updateTime, 1000);
+
+    updateTime();
 
     return () => clearInterval(interval);
   }, [time]);
 
   return (
-    <time className="text-muted-foreground text-xs">{relativeTime}</time>
+    relativeTime ? <time className="text-muted-foreground text-xs">{relativeTime}</time> : null
   );
 }
