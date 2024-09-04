@@ -1,5 +1,7 @@
 import { Post } from '@/components/post.server'
 import { getSession, agent, publicAgent } from '@/lib/atp-client'
+import { Replies } from './replies.client'
+import { repliesSchema, postSchema } from '@/lib/schemas'
 
 export default async function Page({
   params
@@ -17,18 +19,13 @@ export default async function Page({
     uri: post.uri,
   })
 
-  // TODO: figure out why the types here are unknown
-  const postData = thread.data.thread.post as any
-  const replies = thread.data.thread.replies as any[]
+  const postData = postSchema.parse(thread.data.thread.post)
+  const replies = repliesSchema.parse(thread.data.thread.replies)
   
   return (
-    <>
+    <Replies replies={replies}>
       <Post post={postData} />
       <hr className="h-px border-none bg-border" />
-      <span>Replies</span>
-      {replies.map((t: any) => (
-        <Post key={t.post.uri} post={t.post} />
-      ))}
-    </>
+    </Replies>
   )
 }

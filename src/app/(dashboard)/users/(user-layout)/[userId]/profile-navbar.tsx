@@ -1,7 +1,11 @@
+'use client';
+
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import * as routes from '@/lib/routes'
-import { getSession } from '@/lib/atp-client';
+import Image from 'next/image'
+import { ProfileViewDetailed } from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import { usePathname } from 'next/navigation'
 
 const links = [
   {
@@ -27,30 +31,46 @@ const links = [
 ] as const
 
 export function ProfileNavbar({
+  profile,
   userId,
-  activeLink,
   isMyself,
 }: {
+  profile: ProfileViewDetailed;
   userId: string;
-  activeLink: (typeof links[number])['page']
   isMyself: boolean;
 }) {
+  const activeLink = usePathname().split('/')[3] ?? "";
+
+  const avatar = profile.avatar
+
   return (
-    <div className="mb-3 flex flex-row space-x-2">
-      {links.map((link) => {
+    <>
+      <div className="flex flex-row space-x-2 pb-4 items-center">
+        <div className="h-16 w-16 relative">
+          {avatar && <Image src={avatar} alt="Profile image" fill className="rounded-full" />}
+        </div>
 
-        if (link.onlyMyself && !isMyself) {
-          return null
-        }
+        <div className="flex flex-col">
+          <p className="font-bold">{profile.handle}</p>
+          <p className="text-muted-foreground">u/{profile.handle}</p>
+        </div>
+      </div>
+      <div className="mb-3 flex flex-row space-x-2">
+        {links.map((link) => {
 
-        return (
-          <Button key={link.page} asChild variant={link.page === activeLink ? "default" : "outline"}>
-            <Link href={routes.userPage(userId, link.page)}>
-              {link.label}
-            </Link>
-          </Button>
-        )
-      })}
-    </div>
+          if (link.onlyMyself && !isMyself) {
+            return null
+          }
+
+          return (
+            <Button key={link.page} asChild variant={link.page === activeLink ? "default" : "outline"}>
+              <Link href={routes.userPage(userId, link.page)}>
+                {link.label}
+              </Link>
+            </Button>
+          )
+        })}
+      </div>
+    </>
   ) 
 }

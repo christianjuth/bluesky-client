@@ -1,7 +1,7 @@
 import { agent, getSession, publicAgent } from "@/lib/atp-client";
 
 import { Post } from "@/components/post.server"
-import { ProfileNavbar } from '../profile-navbar'
+import { VirtualizedPosts } from '@/components/virtualized-posts'
 
 export default async function Posts({
   params
@@ -12,22 +12,24 @@ export default async function Posts({
 
   const session = await getSession();
   
-  const posts = await (session ? agent : publicAgent).getAuthorFeed({
+  const feed = await (session ? agent : publicAgent).getAuthorFeed({
     actor: userId,
-    limit: 20,
+    limit: 100,
     filter: "posts_no_replies"
   });
 
-  const isMyself = session?.handle === userId;
+
+  const posts = feed.data.feed.map(f => f.post)
+
+  const firstTwenty = posts.slice(0, 10)
+  const remaining = posts.slice(10)
 
   return (
     <>
-      <ProfileNavbar activeLink="posts" userId={userId} isMyself={isMyself}/>
-      <div className="divide-y border-t">
-        {posts.data.feed.map(({ post }) => 
-          <Post key={post.uri} post={post} />
-        )}
-      </div>
+      {firstTwenty.map((post) => (
+        <Post key={post.uri} post={post} />
+      ))}
+      <VirtualizedPosts defaultPosts={remaining} />
     </>
   );
 }

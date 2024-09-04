@@ -4,6 +4,7 @@ import * as routes from "@/lib/routes";
 import { RelativeTime } from './relative-time.client'
 import { cn } from '@/lib/utils'
 import { abbriviateNumber } from '@/lib/format'
+import { postSchema } from '@/lib/schemas'
 
 import { Repost, ReplyOutlined } from '@/components/icons'
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
@@ -113,7 +114,7 @@ export function Post({
   reply,
   reason,
 }: {
-  post: PostView,
+  post: z.infer<typeof postSchema> | PostView,
   reply?: ReplyRef,
   reason?: ReasonRepost | {
     [k: string]: unknown

@@ -25,7 +25,7 @@ export default async function Layout({ children }: {
         <Sidebar userId={user?.handle} />
       </aside>
 
-      <main className="w-full mx-auto pr-4 md:pl-44 max-w-5xl max-md:pl-4">
+      <main className="w-full mx-auto md:pl-44">
         {children}
       </main>
 
