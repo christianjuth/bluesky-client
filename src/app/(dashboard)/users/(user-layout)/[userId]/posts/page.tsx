@@ -1,7 +1,7 @@
 import { agent, getSession, publicAgent } from "@/lib/atp-client";
-
-import { Post } from "@/components/post.server";
+import { Post } from "@/components/post";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
+import { postsSchema } from "@/lib/schemas";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -23,7 +23,11 @@ export default async function Posts({
     filter: "posts_no_replies",
   });
 
-  const posts = feed.data.feed.map((f) => f.post);
+  // The data we get seems to contain some helper functions.
+  // Calling postsSchema.parse removes anything we don't need,
+  // which prevents react from complaining about passing objects
+  // with functions into client components.
+  const posts = postsSchema.parse(feed.data.feed.map((f) => f.post));
 
   const firstTwenty = posts.slice(0, SPLIT);
   const remaining = posts.slice(SPLIT);

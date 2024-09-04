@@ -6,3 +6,5 @@ export const userPage = (userId: string, page: string) =>
   `/users/${userId}/${page}`;
 
 export const home = "/";
+
+export const search = "/search";

@@ -32,10 +32,12 @@ export const postSchema = z
                 thumb: z.string(),
                 fullsize: z.string(),
                 alt: z.string(),
-                aspectRatio: z.object({
-                  height: z.number(),
-                  width: z.number(),
-                }),
+                aspectRatio: z
+                  .object({
+                    height: z.number(),
+                    width: z.number(),
+                  })
+                  .optional(),
               })
               .strip(),
           )
@@ -68,4 +70,4 @@ export const repliesSchema = z.array(
     .strip(),
 );
 
-// export const postsSchema = z.array(postSchema)
+export const postsSchema = z.array(postSchema);

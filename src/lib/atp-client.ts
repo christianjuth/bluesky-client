@@ -54,6 +54,7 @@ export const getSession = async () => {
     return {
       did: sessionCache.did,
       handle: sessionCache.handle,
+      agent,
     };
   }
 
@@ -83,6 +84,7 @@ export const getSession = async () => {
     return {
       did,
       handle,
+      agent,
     };
   } catch (e) {
     return null;
@@ -166,6 +168,17 @@ export const randomTimeIntervalStabalizedString = (
   }
 
   return output;
+};
+
+export const searchPosts = async (params: { query: string; limit: number }) => {
+  const res = await fetch(
+    `https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=${params.query}`,
+    {
+      cache: "no-store",
+    },
+  );
+  const data = await res.json();
+  return data as { posts: PostView[]; cursor: string };
 };
 
 const REVALIDATE_DISCOVER_INTERVAL = 60;

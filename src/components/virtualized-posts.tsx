@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/components/post.server";
+import { Post } from "@/components/post";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 

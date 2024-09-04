@@ -19,7 +19,9 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
       )}
 
       <div className="p-4 border-x border-b rounded-b-xl">
-        {profile.description && <p>{profile.description}</p>}
+        {profile.description && (
+          <p className="overflow-hidden text-ellipsis">{profile.description}</p>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-y-4 gap-x-10">

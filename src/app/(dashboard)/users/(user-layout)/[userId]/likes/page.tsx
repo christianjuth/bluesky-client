@@ -1,6 +1,7 @@
 import { getMyLikedPosts } from "@/lib/atp-client";
-import { Post } from "@/components/post.server";
+import { Post } from "@/components/post";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
+import { postsSchema } from "@/lib/schemas";
 import { notFound } from "next/navigation";
 
 // The number of items that will be rendered initially
@@ -15,8 +16,14 @@ export default async function Posts() {
     notFound();
   }
 
-  const firstTwenty = posts?.data.posts.slice(0, SPLIT);
-  const remaining = posts?.data.posts.slice(SPLIT);
+  // The data we get seems to contain some helper functions.
+  // Calling postsSchema.parse removes anything we don't need,
+  // which prevents react from complaining about passing objects
+  // with functions into client components.
+  const sanitizedPosts = postsSchema.parse(posts.data.posts);
+
+  const firstTwenty = sanitizedPosts.slice(0, SPLIT);
+  const remaining = sanitizedPosts.slice(SPLIT);
 
   return (
     <>

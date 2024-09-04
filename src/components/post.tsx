@@ -11,9 +11,10 @@ import { abbriviateNumber } from "@/lib/format";
 import { postSchema } from "@/lib/schemas";
 
 import { Repost, ReplyOutlined } from "@/components/icons";
-import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
+import { LikeButton } from "./like-button.client";
 
 import z from "zod";
 
@@ -74,9 +75,8 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
             <Image
               src={image.fullsize}
               alt={image.alt}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
+              fill
+              className="rounded-lg object-cover"
             />
           </div>
         ))}
@@ -98,9 +98,8 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
             <Image
               src={image.fullsize}
               alt={image.alt}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
+              fill
+              className="rounded-lg object-cover"
             />
           </div>
         ))}
@@ -146,6 +145,13 @@ export function Post({
 
   const id = post.uri.split("/").pop();
 
+  const initials = (post.author.displayName ?? post.author.handle)
+    .split(" ")
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+
   return (
     <div className="py-4 px-4 md:px-2 space-y-2 relative hover:bg-accent/30">
       {reasonRepost && (
@@ -156,16 +162,10 @@ export function Post({
       )}
       {/* Byline */}
       <div className="flex flex-row space-x-2 items-center text-sm">
-        <div className="h-6 w-6 relative">
-          {avatar && (
-            <Image
-              src={avatar}
-              alt="Profile image"
-              fill
-              className="rounded-full"
-            />
-          )}
-        </div>
+        <Avatar className="h-6 w-6">
+          <AvatarImage src={avatar} />
+          <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
         <Link href={routes.user(post.author.handle)}>{post.author.handle}</Link>
         {/* {createdAt && <span className="text-muted-foreground text-xs">{dayjs(createdAt).format("MMM D")}</span>} */}
         {createdAt && <RelativeTime time={createdAt} />}
@@ -186,10 +186,12 @@ export function Post({
         {images && <Images images={images} />}
 
         <div className="flex flex-row items-center space-x-6 text-sm">
-          <button className="flex items-center space-x-1">
-            {post.viewer?.like ? <IoIosHeart /> : <IoIosHeartEmpty />}
-            {post.likeCount && <div>{abbriviateNumber(post.likeCount)}</div>}
-          </button>
+          <LikeButton
+            cid={post.cid}
+            uri={post.uri}
+            like={post.viewer?.like}
+            likeCount={post.likeCount}
+          />
           <Link
             href={`/users/${post.author.handle}/posts/${id}`}
             className="flex items-center space-x-1"

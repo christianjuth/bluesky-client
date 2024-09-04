@@ -1,6 +1,7 @@
 import { agent, publicAgent, getSession } from "@/lib/atp-client";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
-import { Post } from "@/components/post.server";
+import { Post } from "@/components/post";
+import { postsSchema } from "@/lib/schemas";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -16,22 +17,26 @@ export default async function Posts({
 
   const session = await getSession();
 
-  const { data } = await (session ? agent : publicAgent).getAuthorFeed({
+  const feed = await (session ? agent : publicAgent).getAuthorFeed({
     actor: userId,
     limit: 100,
   });
 
-  const posts = data.feed.map((f) => f.post);
+  // The data we get seems to contain some helper functions.
+  // Calling postsSchema.parse removes anything we don't need,
+  // which prevents react from complaining about passing objects
+  // with functions into client components.
+  const posts = postsSchema.parse(feed.data.feed.map((f) => f.post));
 
-  const firstTwenty = posts.slice(0, SPLIT);
-  const remaining = posts.slice(SPLIT);
+  const rscPosts = posts.slice(0, SPLIT);
+  const restPosts = posts.slice(SPLIT);
 
   return (
     <>
-      {firstTwenty.map((post) => (
+      {rscPosts.map((post) => (
         <Post key={post.uri} post={post} />
       ))}
-      <VirtualizedPosts defaultPosts={remaining} />
+      <VirtualizedPosts defaultPosts={restPosts} />
     </>
   );
 }

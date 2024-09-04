@@ -1,7 +1,7 @@
 import { getSession, agent, publicAgent } from "@/lib/atp-client";
 import { repliesSchema, postSchema } from "@/lib/schemas";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
-import { Post } from "@/components/post.server";
+import { Post } from "@/components/post";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { UserSidebar } from "@/components/user-sidebar";
 
