@@ -51,15 +51,11 @@ export default async function Layout({
 
             <div className="flex flex-col">
               <p className="font-bold">
-                {profile.data.displayName ?? profile.data.handle}
+                {profile.data.displayName || profile.data.handle}
               </p>
               <p className="text-muted-foreground">u/{profile.data.handle}</p>
             </div>
           </div>
-          {/* <ProfileNavbar */}
-          {/*   userId={params.userId} */}
-          {/*   isMyself={isMyself} */}
-          {/* /> */}
 
           <PillNavbar links={links} />
         </div>
