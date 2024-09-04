@@ -34,17 +34,15 @@ export default async function Page({
   const postData = postSchema.parse(thread.data.thread.post);
   const replies = repliesSchema.parse(thread.data.thread.replies);
 
-  const replyPosts = replies.map((r) => r.post);
-
-  const rscReplies = replyPosts.slice(0, SPLIT);
-  const restReplies = replyPosts.slice(SPLIT);
+  const rscReplies = replies.slice(0, SPLIT);
+  const restReplies = replies.slice(SPLIT);
 
   return (
     <TemplateWithSidebar>
       <>
         <Post post={postData} />
         <hr className="h-px bg-border border-none" />
-        {rscReplies.map((post) => (
+        {rscReplies.map(({ post }) => (
           <Post key={post.uri} post={post} />
         ))}
         <VirtualizedPosts defaultPosts={restReplies} />

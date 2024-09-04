@@ -4,11 +4,18 @@ import { Post } from "@/components/post";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { postSchema } from "@/lib/schemas";
+import { feedViewPostSchema } from "@/lib/schemas";
 import z from "zod";
-import { PostView } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
+import {
+  FeedViewPost,
+  PostView,
+} from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 
-function estimateSize(post: z.infer<typeof postSchema> | PostView) {
+function estimateSize(
+  feedViewPost: z.infer<typeof feedViewPostSchema> | FeedViewPost,
+) {
+  const post = feedViewPost.post;
+
   let totalHeight = 0;
 
   // Byline height
@@ -36,9 +43,9 @@ function estimateSize(post: z.infer<typeof postSchema> | PostView) {
 export function VirtualizedPosts({
   defaultPosts,
 }: {
-  defaultPosts: z.infer<typeof postSchema>[] | PostView[];
+  defaultPosts: z.infer<typeof feedViewPostSchema>[] | FeedViewPost[];
 }) {
-  const [posts, setPosts] = useState(defaultPosts);
+  const [feed, setFeed] = useState(defaultPosts);
 
   const parentRef = useRef<HTMLDivElement>(null);
   const parentOffsetRef = useRef(0);
@@ -48,15 +55,15 @@ export function VirtualizedPosts({
   }, []);
 
   const virtualizer = useWindowVirtualizer({
-    count: posts.length,
-    estimateSize: (i) => estimateSize(posts[i]),
+    count: feed.length,
+    estimateSize: (i) => estimateSize(feed[i]),
     overscan: 10,
     scrollMargin: parentOffsetRef.current,
   });
 
   const items = virtualizer.getVirtualItems();
 
-  const postsLength = posts.length;
+  const postsLength = feed.length;
   const virtualizedItems = virtualizer.getVirtualItems();
   useEffect(() => {
     const [lastItem] = [...virtualizedItems].reverse();
@@ -94,7 +101,10 @@ export function VirtualizedPosts({
             data-index={virtualRow.index}
             ref={virtualizer.measureElement}
           >
-            <Post post={posts[virtualRow.index]} />
+            <Post
+              post={feed[virtualRow.index].post}
+              reason={feed[virtualRow.index].reason}
+            />
           </div>
         ))}
       </div>

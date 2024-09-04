@@ -20,6 +20,7 @@ export const postSchema = z
     record: z
       .object({
         text: z.string().optional(),
+        createdAt: z.string().optional(),
       })
       .strip(),
     embed: z
@@ -71,3 +72,16 @@ export const repliesSchema = z.array(
 );
 
 export const postsSchema = z.array(postSchema);
+
+export const feedViewPostSchema = z
+  .object({
+    post: postSchema,
+    reason: z
+      .object({
+        by: accountSchema,
+      })
+      .optional(),
+  })
+  .strip();
+
+export const feedViewPostsSchema = z.array(feedViewPostSchema);

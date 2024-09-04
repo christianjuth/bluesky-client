@@ -1,6 +1,5 @@
 import {
   PostView,
-  ReasonRepost,
   ReplyRef,
 } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
@@ -56,9 +55,7 @@ const reasonRepost = z
   })
   .strip();
 
-function parseReasonRepost(
-  reason: ReasonRepost | { [k: string]: unknown; $type: string } | undefined,
-) {
+function parseReasonRepost(reason: { [k: string]: unknown } | undefined) {
   try {
     return reasonRepost.parse(reason);
   } catch (e) {
@@ -115,12 +112,9 @@ export function Post({
 }: {
   post: z.infer<typeof postSchema> | PostView;
   reply?: ReplyRef;
-  reason?:
-    | ReasonRepost
-    | {
-        [k: string]: unknown;
-        $type: string;
-      };
+  reason?: {
+    [k: string]: unknown;
+  };
 }) {
   let text = "error";
 
@@ -167,7 +161,6 @@ export function Post({
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <Link href={routes.user(post.author.handle)}>{post.author.handle}</Link>
-        {/* {createdAt && <span className="text-muted-foreground text-xs">{dayjs(createdAt).format("MMM D")}</span>} */}
         {createdAt && <RelativeTime time={createdAt} />}
       </div>
       <div className="pl-8 space-y-3">
@@ -181,7 +174,8 @@ export function Post({
             </span>
           </div>
         )}
-        <p>{text}</p>
+
+        <p className="overflow-hidden text-ellipsis">{text}</p>
 
         {images && <Images images={images} />}
 

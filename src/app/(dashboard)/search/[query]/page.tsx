@@ -20,7 +20,9 @@ export default async function Page({ params }: { params: { query: string } }) {
   return (
     <>
       {rscPosts?.map((post) => <Post key={post.uri} post={post} />)}
-      {restPosts && <VirtualizedPosts defaultPosts={restPosts} />}
+      {restPosts && (
+        <VirtualizedPosts defaultPosts={restPosts.map((p) => ({ post: p }))} />
+      )}
     </>
   );
 }

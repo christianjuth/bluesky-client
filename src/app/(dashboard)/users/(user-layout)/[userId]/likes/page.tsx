@@ -22,15 +22,15 @@ export default async function Posts() {
   // with functions into client components.
   const sanitizedPosts = postsSchema.parse(posts.data.posts);
 
-  const firstTwenty = sanitizedPosts.slice(0, SPLIT);
-  const remaining = sanitizedPosts.slice(SPLIT);
+  const rscPosts = sanitizedPosts.slice(0, SPLIT);
+  const restPosts = sanitizedPosts.slice(SPLIT);
 
   return (
     <>
-      {firstTwenty.map((post) => (
+      {rscPosts.map((post) => (
         <Post key={post.uri} post={post} />
       ))}
-      <VirtualizedPosts defaultPosts={remaining} />
+      <VirtualizedPosts defaultPosts={restPosts.map((p) => ({ post: p }))} />
     </>
   );
 }

@@ -32,7 +32,11 @@ export default async function Pgae() {
       <TemplateWithSidebar>
         <>
           {rscPosts?.map((post) => <Post key={post.uri} post={post} />)}
-          {restPosts && <VirtualizedPosts defaultPosts={restPosts} />}
+          {restPosts && (
+            <VirtualizedPosts
+              defaultPosts={restPosts.map((p) => ({ post: p }))}
+            />
+          )}
         </>
         <div>Sidebar</div>
       </TemplateWithSidebar>
