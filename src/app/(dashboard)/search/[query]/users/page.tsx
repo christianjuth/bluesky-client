@@ -1,4 +1,4 @@
-import { agent } from "@/lib/atp-client";
+import { publicAgent } from "@/lib/atp-client";
 import { Profile } from "@/components/profile";
 
 // The number of items that will be rendered initially
@@ -7,7 +7,7 @@ import { Profile } from "@/components/profile";
 // const SPLIT = 10;
 
 export default async function Page({ params }: { params: { query: string } }) {
-  const actors = await agent.searchActors({
+  const actors = await publicAgent.searchActors({
     q: params.query,
     limit: 10,
   });
