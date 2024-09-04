@@ -2,6 +2,7 @@ import { agent, publicAgent, getSession } from "@/lib/atp-client";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
 import { feedViewPostsSchema } from "@/lib/schemas";
+import * as routes from "@/lib/routes";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -19,7 +20,7 @@ export default async function Posts({
 
   const feed = await (session ? agent : publicAgent).getAuthorFeed({
     actor: userId,
-    limit: 100,
+    limit: 30,
   });
 
   // The data we get seems to contain some helper functions.
@@ -36,7 +37,11 @@ export default async function Posts({
       {rscPosts.map(({ post, reason }) => (
         <Post key={post.uri} post={post} reason={reason} />
       ))}
-      <VirtualizedPosts defaultPosts={restPosts} />
+      <VirtualizedPosts
+        defaultPosts={restPosts}
+        defaultCursor={feed.data.cursor}
+        loadMoreEndpoint={routes.user(userId) + "/loadmore"}
+      />
     </>
   );
 }

@@ -42,9 +42,14 @@ function estimateSize(
 
 export function VirtualizedPosts({
   defaultPosts,
+  defaultCursor,
+  loadMoreEndpoint,
 }: {
   defaultPosts: z.infer<typeof feedViewPostSchema>[] | FeedViewPost[];
+  defaultCursor?: string;
+  loadMoreEndpoint?: string;
 }) {
+  const [cursor, setCursor] = useState(defaultCursor);
   const [feed, setFeed] = useState(defaultPosts);
 
   const parentRef = useRef<HTMLDivElement>(null);
@@ -63,23 +68,48 @@ export function VirtualizedPosts({
 
   const items = virtualizer.getVirtualItems();
 
-  const postsLength = feed.length;
   const virtualizedItems = virtualizer.getVirtualItems();
+
+  const [loadingMore, setLoadingMore] = useState(false);
+  const atLastItem =
+    virtualizedItems[virtualizedItems.length - 1]?.index === feed.length - 1;
+
+  if (atLastItem && !loadingMore) {
+    setLoadingMore(true);
+  }
+
   useEffect(() => {
-    const [lastItem] = [...virtualizedItems].reverse();
+    if (loadingMore && loadMoreEndpoint) {
+      let locked = false;
+      const abortController = new AbortController();
 
-    if (!lastItem) {
-      return;
-    }
+      try {
+        fetch(`${loadMoreEndpoint}?cursor=${cursor}`, {
+          signal: abortController.signal,
+        })
+          .then((res) => res.json())
+          .then(
+            (data: {
+              cursor: string;
+              feed: z.infer<typeof feedViewPostSchema>[];
+            }) => {
+              if (!locked) {
+                setCursor(data.cursor);
+                setFeed((prevFeed) => [...prevFeed, ...(data.feed as any)]);
+                setLoadingMore(false);
+              }
+            },
+          );
+      } catch (e) {
+        setLoadingMore(false);
+      }
 
-    if (
-      lastItem.index >=
-      postsLength - 1
-      // hasNextPage &&
-      // !isFetchingNextPage
-    ) {
+      return () => {
+        locked = true;
+        abortController.abort();
+      };
     }
-  }, [postsLength, virtualizedItems]);
+  }, [loadingMore, loadMoreEndpoint, cursor]);
 
   return (
     <div
