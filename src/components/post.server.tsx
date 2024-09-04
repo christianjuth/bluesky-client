@@ -52,20 +52,6 @@ function parseReasonRepost(reason: ReasonRepost | { [k: string]: unknown, $type:
 }
 
 function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
-  if (images.length === 1) {
-    return (
-      <div className="relative aspect-[16/9]">
-        <Image
-          src={images[0].fullsize}
-          alt={images[0].alt}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-lg"
-        />
-      </div>
-    )
-  }
-
   if (images.length === 2 || images.length === 4) {
     return (
       <div className="grid grid-cols-2 gap-2">
@@ -141,7 +127,7 @@ export function Post({
   const id = post.uri.split('/').pop();
 
   return (
-    <div className="py-4 px-2 space-y-2 relative hover:bg-accent/30">
+    <div className="py-4 px-4 md:px-2 space-y-2 relative hover:bg-accent/30">
       {reasonRepost && (
         <span className="text-sm ml-8 -mb-1 flex items-center"><Repost className="text-lg mr-0.5"/> Reposted by {reasonRepost.by.displayName}</span>
       )}

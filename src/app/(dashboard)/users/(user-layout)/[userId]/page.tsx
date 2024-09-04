@@ -2,6 +2,11 @@ import { agent, publicAgent, getSession } from "@/lib/atp-client";
 import { VirtualizedPosts } from '@/components/virtualized-posts'
 import { Post } from '@/components/post.server'
 
+// The number of items that will be rendered initially
+// and live outside of the virtualized list. This allows
+// the first n items to be rendered immediately, without JS. 
+const SPLIT = 10
+
 export default async function Posts({
   params,
 }: {
@@ -18,8 +23,8 @@ export default async function Posts({
 
   const posts = data.feed.map(f => f.post)
 
-  const firstTwenty = posts.slice(0, 10)
-  const remaining = posts.slice(10)
+  const firstTwenty = posts.slice(0, SPLIT)
+  const remaining = posts.slice(SPLIT)
 
   return (
     <>

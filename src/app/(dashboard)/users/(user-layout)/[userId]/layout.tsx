@@ -1,6 +1,8 @@
 import { getSession, publicAgent } from "@/lib/atp-client";
-import { Sidebar } from './sidebar'
+import { UserSidebar } from '@/components/user-sidebar'
 import { ProfileNavbar } from './profile-navbar'
+import { TemplateWithSidebar } from '@/components/template-with-sidebar'
+import Image from 'next/image'
 
 export default async function Layout({ 
   children,
@@ -17,15 +19,27 @@ export default async function Layout({
 
   const isMyself = session?.handle === params.userId;
 
+  const avatar = profile.data.avatar
+
   return (
-    <div className="flex flex-row justify-center space-x-4">
-      <div className="flex-1 max-w-[50ch] pt-4">
-        <ProfileNavbar activeLink="" userId={params.userId} isMyself={isMyself} profile={profile.data} />
+    <TemplateWithSidebar>
+      <>
+        <div className="max-md:px-4 px-2">
+          <div className="flex flex-row space-x-2 pb-4 items-center">
+            <div className="h-16 w-16 relative">
+              {avatar && <Image src={avatar} alt="Profile image" fill className="rounded-full" />}
+            </div>
+
+            <div className="flex flex-col">
+              <p className="font-bold">{profile.data.handle}</p>
+              <p className="text-muted-foreground">u/{profile.data.handle}</p>
+            </div>
+          </div>
+          <ProfileNavbar userId={params.userId} isMyself={isMyself} profile={profile.data} />
+        </div>
         {children}
-      </div>
-      <div className="sticky top-14 pt-4 h-min">
-        <Sidebar profile={profile.data} />
-      </div>
-    </div>
+      </>
+      <UserSidebar profile={profile.data} />
+    </TemplateWithSidebar>
   )
 }

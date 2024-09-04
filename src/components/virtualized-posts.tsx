@@ -8,6 +8,31 @@ import { postSchema } from '@/lib/schemas'
 import z from 'zod'
 import { PostView } from '@atproto/api/dist/client/types/app/bsky/feed/defs';
 
+function estimateSize(post: z.infer<typeof postSchema> | PostView) {
+  let totalHeight = 0
+
+  // Byline height
+  totalHeight += 24
+
+  // Margin above text
+  totalHeight += 8
+
+  // Measure text of post
+  const charsPerLine = 50
+  const lineHeight = 24
+  const text = 'text' in post.record ? post.record.text : undefined
+  const lines = text ? Math.ceil(text.length / charsPerLine) : 0
+  totalHeight += lineHeight * lines
+
+  // Footer
+  totalHeight += 20
+
+  // Card above below padding
+  totalHeight += 16 * 2
+
+  return totalHeight
+}
+
 export function VirtualizedPosts({ 
   defaultPosts, 
 }: { 
@@ -24,9 +49,8 @@ export function VirtualizedPosts({
 
   const virtualizer = useWindowVirtualizer({
     count: posts.length,
-    estimateSize: () => 100,
-    // overscan: 10,
-    overscan: 0,
+    estimateSize: (i) => estimateSize(posts[i]),
+    overscan: 10,
     scrollMargin: parentOffsetRef.current,
   })
 
@@ -44,8 +68,6 @@ export function VirtualizedPosts({
       // hasNextPage &&
       // !isFetchingNextPage
     ) {
-      console.log("load more")
-      // fetchNextPage()
     }
   }, [
     posts.length,
