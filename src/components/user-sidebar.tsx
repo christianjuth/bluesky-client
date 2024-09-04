@@ -34,7 +34,7 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
 
           <div className="flex flex-col">
             <span>
-              {profile.followsCount
+              {profile.followersCount
                 ? abbriviateNumber(profile.followersCount)
                 : "Unknown"}
             </span>

@@ -56,8 +56,10 @@ export function VirtualizedPosts({
 
   const items = virtualizer.getVirtualItems();
 
+  const postsLength = posts.length;
+  const virtualizedItems = virtualizer.getVirtualItems();
   useEffect(() => {
-    const [lastItem] = [...virtualizer.getVirtualItems()].reverse();
+    const [lastItem] = [...virtualizedItems].reverse();
 
     if (!lastItem) {
       return;
@@ -65,12 +67,12 @@ export function VirtualizedPosts({
 
     if (
       lastItem.index >=
-      posts.length - 1
+      postsLength - 1
       // hasNextPage &&
       // !isFetchingNextPage
     ) {
     }
-  }, [posts.length, virtualizer.getVirtualItems()]);
+  }, [postsLength, virtualizedItems]);
 
   return (
     <div
