@@ -6,12 +6,10 @@ import { useEffect, useState } from "react";
 
 dayjs.extend(relativeTime);
 
-export function RelativeTime({
-  time
-}: {
-  time: string
-}) {
-  const [relativeTime, setRelativeTime] = useState<string>(dayjs(time).format("MMM D, YYYY h:mma"));
+export function RelativeTime({ time }: { time: string }) {
+  const [relativeTime, setRelativeTime] = useState<string>(
+    dayjs(time).format("MMM D, YYYY h:mma"),
+  );
 
   useEffect(() => {
     const updateTime = () => setRelativeTime(dayjs(time).fromNow());
@@ -23,7 +21,7 @@ export function RelativeTime({
     return () => clearInterval(interval);
   }, [time]);
 
-  return (
-    relativeTime ? <time className="text-muted-foreground text-xs">{relativeTime}</time> : null
-  );
+  return relativeTime ? (
+    <time className="text-muted-foreground text-xs">{relativeTime}</time>
+  ) : null;
 }

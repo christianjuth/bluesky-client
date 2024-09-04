@@ -1,10 +1,12 @@
 import { getSession } from "@/lib/atp-client";
-import { BottomTabNavigator, Sidebar } from "@/components/nav.client"
+import { BottomTabNavigator, Sidebar } from "@/components/nav.client";
 import Link from "next/link";
-import { ModeToggle } from '@/components/theme-mode-toggle'
+import { ModeToggle } from "@/components/theme-mode-toggle";
 import * as routes from "@/lib/routes";
 
-export default async function Layout({ children }: {
+export default async function Layout({
+  children,
+}: {
   children: React.ReactNode;
 }) {
   const user = await getSession();
@@ -25,9 +27,7 @@ export default async function Layout({ children }: {
         <Sidebar userId={user?.handle} />
       </aside>
 
-      <main className="w-full mx-auto md:pl-44">
-        {children}
-      </main>
+      <main className="w-full mx-auto md:pl-44">{children}</main>
 
       <BottomTabNavigator />
     </div>

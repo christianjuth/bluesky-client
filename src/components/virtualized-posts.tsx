@@ -1,78 +1,76 @@
 "use client";
 
-import { Post } from '@/components/post.server'
-import { useWindowVirtualizer } from '@tanstack/react-virtual'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Post } from "@/components/post.server";
+import { useWindowVirtualizer } from "@tanstack/react-virtual";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { postSchema } from '@/lib/schemas'
-import z from 'zod'
-import { PostView } from '@atproto/api/dist/client/types/app/bsky/feed/defs';
+import { postSchema } from "@/lib/schemas";
+import z from "zod";
+import { PostView } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 
 function estimateSize(post: z.infer<typeof postSchema> | PostView) {
-  let totalHeight = 0
+  let totalHeight = 0;
 
   // Byline height
-  totalHeight += 24
+  totalHeight += 24;
 
   // Margin above text
-  totalHeight += 8
+  totalHeight += 8;
 
   // Measure text of post
-  const charsPerLine = 50
-  const lineHeight = 24
-  const text = 'text' in post.record ? post.record.text : undefined
-  const lines = text ? Math.ceil(text.length / charsPerLine) : 0
-  totalHeight += lineHeight * lines
+  const charsPerLine = 50;
+  const lineHeight = 24;
+  const text = "text" in post.record ? post.record.text : undefined;
+  const lines = text ? Math.ceil(text.length / charsPerLine) : 0;
+  totalHeight += lineHeight * lines;
 
   // Footer
-  totalHeight += 20
+  totalHeight += 20;
 
   // Card above below padding
-  totalHeight += 16 * 2
+  totalHeight += 16 * 2;
 
-  return totalHeight
+  return totalHeight;
 }
 
-export function VirtualizedPosts({ 
-  defaultPosts, 
-}: { 
-  defaultPosts: z.infer<typeof postSchema>[] | PostView[], 
+export function VirtualizedPosts({
+  defaultPosts,
+}: {
+  defaultPosts: z.infer<typeof postSchema>[] | PostView[];
 }) {
   const [posts, setPosts] = useState(defaultPosts);
 
-  const parentRef = useRef<HTMLDivElement>(null)
-  const parentOffsetRef = useRef(0)
+  const parentRef = useRef<HTMLDivElement>(null);
+  const parentOffsetRef = useRef(0);
 
   useLayoutEffect(() => {
-    parentOffsetRef.current = parentRef.current?.offsetTop ?? 0
-  }, [])
+    parentOffsetRef.current = parentRef.current?.offsetTop ?? 0;
+  }, []);
 
   const virtualizer = useWindowVirtualizer({
     count: posts.length,
     estimateSize: (i) => estimateSize(posts[i]),
     overscan: 10,
     scrollMargin: parentOffsetRef.current,
-  })
+  });
 
-  const items = virtualizer.getVirtualItems()
+  const items = virtualizer.getVirtualItems();
 
   useEffect(() => {
-    const [lastItem] = [...virtualizer.getVirtualItems()].reverse()
+    const [lastItem] = [...virtualizer.getVirtualItems()].reverse();
 
     if (!lastItem) {
-      return
+      return;
     }
 
     if (
-      lastItem.index >= posts.length - 1
+      lastItem.index >=
+      posts.length - 1
       // hasNextPage &&
       // !isFetchingNextPage
     ) {
     }
-  }, [
-    posts.length,
-    virtualizer.getVirtualItems(),
-  ])
+  }, [posts.length, virtualizer.getVirtualItems()]);
 
   return (
     <div
@@ -99,5 +97,5 @@ export function VirtualizedPosts({
         ))}
       </div>
     </div>
-  )
+  );
 }

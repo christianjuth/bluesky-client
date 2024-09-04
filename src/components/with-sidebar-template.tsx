@@ -1,4 +1,1 @@
-
-function WithSidebarTemplate() {
-
-}
+function WithSidebarTemplate() {}

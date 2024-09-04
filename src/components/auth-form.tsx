@@ -1,38 +1,35 @@
-import { FormItem } from '@/components/formitem'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { FormItem } from "@/components/formitem";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-import { agent } from '@/lib/atp-client'
+import { agent } from "@/lib/atp-client";
 import { zfd } from "zod-form-data";
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation';
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const loginSchema = zfd.formData({
   username: zfd.text(),
-  password: zfd.text()
-})
+  password: zfd.text(),
+});
 
 export async function login(formData: FormData) {
-'use server'
+  "use server";
 
-  const {
-    username,
-    password,
-  } = loginSchema.parse(formData)
+  const { username, password } = loginSchema.parse(formData);
 
   const { data } = await agent.login({
     identifier: username,
-    password: password
-  })
+    password: password,
+  });
 
-  const { accessJwt, refreshJwt, did, handle } = data
+  const { accessJwt, refreshJwt, did, handle } = data;
 
-  cookies().set('accessJwt', accessJwt)
-  cookies().set('refreshJwt', refreshJwt)
-  cookies().set('did', did)
-  cookies().set('handle', handle)
+  cookies().set("accessJwt", accessJwt);
+  cookies().set("refreshJwt", refreshJwt);
+  cookies().set("did", did);
+  cookies().set("handle", handle);
 
-  redirect('/')
+  redirect("/");
 }
 
 export function AuthForm() {
@@ -48,5 +45,5 @@ export function AuthForm() {
 
       <Button type="submit">Login</Button>
     </form>
-  )
+  );
 }

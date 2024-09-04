@@ -3,7 +3,7 @@
 // import { Button } from '@/components/ui/button'
 // import { login } from './action'
 
-import { AuthForm } from '@/components/auth-form'
+import { AuthForm } from "@/components/auth-form";
 
 export default function Page() {
   return (
@@ -21,5 +21,5 @@ export default function Page() {
       {/* </form> */}
       <AuthForm />
     </div>
-  )
+  );
 }

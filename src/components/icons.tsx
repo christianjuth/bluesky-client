@@ -7,4 +7,7 @@
 export { GoHome as HomeOutlined } from "react-icons/go";
 export { IoPersonCircleOutline as PersonOutlined } from "react-icons/io5";
 export { IoRepeatOutline as Repost } from "react-icons/io5";
-export { FaMessage as ReplyFilled, FaRegMessage as ReplyOutlined } from "react-icons/fa6";
+export {
+  FaMessage as ReplyFilled,
+  FaRegMessage as ReplyOutlined,
+} from "react-icons/fa6";

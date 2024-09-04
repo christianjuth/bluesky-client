@@ -1,52 +1,50 @@
-"use client"
+"use client";
 
-import { Button } from '@/components/ui/button'
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import * as routes from "@/lib/routes"
+import * as routes from "@/lib/routes";
 
-import { HomeOutlined, PersonOutlined } from "@/components/icons"
+import { HomeOutlined, PersonOutlined } from "@/components/icons";
 
 const getSidebarLinks = (userId?: string) => [
   {
     href: routes.home,
     text: "Home",
-    icon: HomeOutlined
+    icon: HomeOutlined,
   },
-  ...(userId ? [
-    {
-      href: routes.user(userId),
-      text: "Profile",
-      icon: PersonOutlined
-    },
-  ] : [
-    {
-      href: routes.auth,
-      text: "Login",
-      icon: PersonOutlined
-    }
-  ])
-]
+  ...(userId
+    ? [
+        {
+          href: routes.user(userId),
+          text: "Profile",
+          icon: PersonOutlined,
+        },
+      ]
+    : [
+        {
+          href: routes.auth,
+          text: "Login",
+          icon: PersonOutlined,
+        },
+      ]),
+];
 
 const matchPaths = (target: string, current: string) => {
   if (target === routes.home) {
-    return current === target
+    return current === target;
   }
 
-  return current.indexOf(target) === 0
-}
+  return current.indexOf(target) === 0;
+};
 
-export function Sidebar({
-  userId
-}: {
-  userId?: string;
-}) {
+export function Sidebar({ userId }: { userId?: string }) {
   const pathname = usePathname();
 
   return (
     <div className="flex flex-col gap-2">
       {getSidebarLinks(userId).map(({ href, text, icon: Icon }) => (
-        <Button 
+        <Button
           key={href}
           asChild
           variant={matchPaths(href, pathname) ? "default" : "ghost"}
@@ -59,20 +57,16 @@ export function Sidebar({
         </Button>
       ))}
     </div>
-  )
+  );
 }
 
-export function BottomTabNavigator({
-  userId
-}: {
-  userId?: string;
-}) {
+export function BottomTabNavigator({ userId }: { userId?: string }) {
   const pathname = usePathname();
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-14 border-t flex flex-row items-center justify-between px-4 bg-background/70 z-20 backdrop-blur md:hidden">
       {getSidebarLinks(userId).map(({ href, icon: Icon }) => (
-        <Button 
+        <Button
           key={href}
           asChild
           variant={matchPaths(href, pathname) ? "default" : "ghost"}
@@ -83,5 +77,5 @@ export function BottomTabNavigator({
         </Button>
       ))}
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
 import { useId } from "react";
 
-export function FormItem({ 
+export function FormItem({
   children,
-  label
+  label,
 }: {
   children: (props: { id: string }) => React.ReactNode;
   label: string;
@@ -13,5 +13,5 @@ export function FormItem({
       <label htmlFor={id}>{label}</label>
       {children({ id })}
     </div>
-  )
+  );
 }
