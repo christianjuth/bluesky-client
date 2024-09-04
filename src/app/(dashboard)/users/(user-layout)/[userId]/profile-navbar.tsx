@@ -3,8 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import * as routes from "@/lib/routes";
-import { ProfileViewDetailed } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 const links = [
   {
@@ -30,15 +29,13 @@ const links = [
 ] as const;
 
 export function ProfileNavbar({
-  profile,
   userId,
   isMyself,
 }: {
-  profile: ProfileViewDetailed;
   userId: string;
   isMyself: boolean;
 }) {
-  const activeLink = usePathname().split("/")[3] ?? "";
+  const activeLink = useSelectedLayoutSegment() ?? "";
 
   return (
     <>

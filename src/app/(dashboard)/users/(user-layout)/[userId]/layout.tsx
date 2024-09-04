@@ -3,6 +3,8 @@ import { UserSidebar } from "@/components/user-sidebar";
 import { ProfileNavbar } from "./profile-navbar";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { PillNavbar } from "@/components/pill-navbar";
+import * as routes from "@/lib/routes";
 
 export default async function Layout({
   children,
@@ -28,6 +30,15 @@ export default async function Layout({
     .join("")
     .toUpperCase();
 
+  const links = [
+    { href: routes.user(params.userId), label: "Overview" },
+    { href: routes.userPosts(params.userId), label: "Posts" },
+    { href: routes.userReplies(params.userId), label: "Replies" },
+    ...(isMyself
+      ? [{ href: routes.userLikes(params.userId), label: "Likes" }]
+      : []),
+  ];
+
   return (
     <TemplateWithSidebar>
       <>
@@ -45,11 +56,12 @@ export default async function Layout({
               <p className="text-muted-foreground">u/{profile.data.handle}</p>
             </div>
           </div>
-          <ProfileNavbar
-            userId={params.userId}
-            isMyself={isMyself}
-            profile={profile.data}
-          />
+          {/* <ProfileNavbar */}
+          {/*   userId={params.userId} */}
+          {/*   isMyself={isMyself} */}
+          {/* /> */}
+
+          <PillNavbar links={links} />
         </div>
         {children}
       </>

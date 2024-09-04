@@ -30,11 +30,9 @@ export function LikeButton({
 
   return (
     <form className="contents" action={action}>
-      <input type="hidden" name="cid" value={cid} />
-      <input type="hidden" name="uri" value={uri} />
       <button className="flex items-center space-x-1">
         {state.like ? <IoIosHeart /> : <IoIosHeartEmpty />}
-        {likeCount && <div>{abbriviateNumber(likeCount)}</div>}
+        {likeCount !== undefined && <div>{abbriviateNumber(likeCount)}</div>}
       </button>
     </form>
   );

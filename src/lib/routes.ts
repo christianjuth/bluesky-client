@@ -1,6 +1,9 @@
 export const auth = "/auth";
 
 export const user = (userId: string) => `/users/${userId}`;
+export const userPosts = (userId: string) => `/users/${userId}/posts`;
+export const userReplies = (userId: string) => `/users/${userId}/replies`;
+export const userLikes = (userId: string) => `/users/${userId}/likes`;
 
 export const userPage = (userId: string, page: string) =>
   `/users/${userId}/${page}`;
@@ -8,3 +11,6 @@ export const userPage = (userId: string, page: string) =>
 export const home = "/";
 
 export const search = "/search";
+
+export const searchPosts = (query: string) => `/search/${query}`;
+export const searchUsers = (query: string) => `/search/${query}/users`;

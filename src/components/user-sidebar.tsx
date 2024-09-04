@@ -6,8 +6,8 @@ import { abbriviateNumber } from "@/lib/format";
 export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
   return (
     <div className="rounded-xl w-80">
-      {profile.banner && (
-        <div className="relative aspect-[2.5] w-full bg-accent rounded-t-xl">
+      <div className="relative aspect-[2.5] w-full bg-accent rounded-t-xl">
+        {profile.banner && (
           <Image
             src={profile.banner}
             alt="Profile banner"
@@ -15,8 +15,8 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
             objectFit="cover"
             className="rounded-tr-xl rounded-tl-xl object-cover"
           />
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="p-4 border-x border-b rounded-b-xl">
         {profile.description && (
@@ -27,7 +27,7 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
         <div className="grid grid-cols-2 gap-y-4 gap-x-10">
           <div className="flex flex-col">
             <span>
-              {profile.followsCount
+              {profile.followsCount !== undefined
                 ? abbriviateNumber(profile.followsCount)
                 : "Unknown"}
             </span>
@@ -36,7 +36,7 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
 
           <div className="flex flex-col">
             <span>
-              {profile.followersCount
+              {profile.followersCount !== undefined
                 ? abbriviateNumber(profile.followersCount)
                 : "Unknown"}
             </span>
@@ -50,7 +50,7 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
 
           <div className="flex flex-col">
             <span>
-              {profile.postsCount
+              {profile.postsCount !== undefined
                 ? abbriviateNumber(profile.postsCount)
                 : "Unknown"}
             </span>
