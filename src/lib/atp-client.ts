@@ -111,7 +111,10 @@ const likesSchema = z.array(
   }),
 );
 
-export const getMyLikedPosts = async (params: { limit?: number }) => {
+export const getMyLikedPosts = async (params: {
+  limit?: number;
+  cursor?: string;
+}) => {
   const session = await getSession();
   const userId = session?.handle;
 
@@ -133,7 +136,10 @@ export const getMyLikedPosts = async (params: { limit?: number }) => {
     uris,
   });
 
-  return posts;
+  return {
+    cursor: likes.data.cursor,
+    posts: posts.data.posts,
+  };
 };
 
 export const userIsMyself = async (userId: string) => {

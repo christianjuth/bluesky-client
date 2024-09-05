@@ -2,7 +2,6 @@ import { agent, publicAgent, getSession } from "@/lib/atp-client";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
 import { feedViewPostsSchema } from "@/lib/schemas";
-import * as routes from "@/lib/routes";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -40,7 +39,8 @@ export default async function Posts({
       <VirtualizedPosts
         defaultPosts={restPosts}
         defaultCursor={feed.data.cursor}
-        loadMoreEndpoint={routes.user(userId) + "/loadmore"}
+        actor={userId}
+        mode="overview"
       />
     </>
   );

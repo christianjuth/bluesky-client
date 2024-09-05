@@ -6,10 +6,12 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { feedViewPostSchema } from "@/lib/schemas";
 import z from "zod";
-import {
-  FeedViewPost,
-  PostView,
-} from "@atproto/api/dist/client/types/app/bsky/feed/defs";
+import { FeedViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
+
+import type {
+  GetResponse as GetPostResponse,
+  QueryParams as GetPostsParams,
+} from "@/app/api/posts/route";
 
 function estimateSize(
   feedViewPost: z.infer<typeof feedViewPostSchema> | FeedViewPost,
@@ -43,11 +45,13 @@ function estimateSize(
 export function VirtualizedPosts({
   defaultPosts,
   defaultCursor,
-  loadMoreEndpoint,
+  actor,
+  mode,
 }: {
-  defaultPosts: z.infer<typeof feedViewPostSchema>[] | FeedViewPost[];
+  defaultPosts: z.infer<typeof feedViewPostSchema>[];
   defaultCursor?: string;
-  loadMoreEndpoint?: string;
+  actor?: string;
+  mode?: GetPostsParams["mode"];
 }) {
   const [cursor, setCursor] = useState(defaultCursor);
   const [feed, setFeed] = useState(defaultPosts);
@@ -79,27 +83,22 @@ export function VirtualizedPosts({
   }
 
   useEffect(() => {
-    if (loadingMore && loadMoreEndpoint) {
+    if (loadingMore && cursor && actor && mode) {
       let locked = false;
       const abortController = new AbortController();
 
       try {
-        fetch(`${loadMoreEndpoint}?cursor=${cursor}`, {
+        fetch(`/api/posts?userId=${actor}&mode=${mode}&cursor=${cursor}`, {
           signal: abortController.signal,
         })
           .then((res) => res.json())
-          .then(
-            (data: {
-              cursor: string;
-              feed: z.infer<typeof feedViewPostSchema>[];
-            }) => {
-              if (!locked) {
-                setCursor(data.cursor);
-                setFeed((prevFeed) => [...prevFeed, ...(data.feed as any)]);
-                setLoadingMore(false);
-              }
-            },
-          );
+          .then((data: GetPostResponse) => {
+            if (!locked && !("errors" in data)) {
+              setCursor(data.feed.length > 0 ? data.cursor : undefined);
+              setFeed((prevFeed) => [...prevFeed, ...data.feed]);
+              setLoadingMore(false);
+            }
+          });
       } catch (e) {
         setLoadingMore(false);
       }
@@ -109,7 +108,7 @@ export function VirtualizedPosts({
         abortController.abort();
       };
     }
-  }, [loadingMore, loadMoreEndpoint, cursor]);
+  }, [loadingMore, cursor, actor, mode]);
 
   return (
     <div

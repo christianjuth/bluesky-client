@@ -38,7 +38,12 @@ export default async function Posts({
       {rscPosts.map(({ post, reason }) => (
         <Post key={post.uri} post={post} reason={reason} />
       ))}
-      <VirtualizedPosts defaultPosts={restPosts} />
+      <VirtualizedPosts
+        defaultPosts={restPosts}
+        defaultCursor={feed.data.cursor}
+        actor={userId}
+        mode="replies"
+      />
     </>
   );
 }

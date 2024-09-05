@@ -19,7 +19,7 @@ export default async function Posts({
 
   const feed = await (session ? agent : publicAgent).getAuthorFeed({
     actor: userId,
-    limit: 100,
+    limit: 30,
     filter: "posts_no_replies",
   });
 
@@ -37,7 +37,12 @@ export default async function Posts({
       {rscPosts.map(({ post, reason }) => (
         <Post key={post.uri} post={post} reason={reason} />
       ))}
-      <VirtualizedPosts defaultPosts={restPosts} />
+      <VirtualizedPosts
+        defaultPosts={restPosts}
+        defaultCursor={feed.data.cursor}
+        actor={userId}
+        mode="posts"
+      />
     </>
   );
 }

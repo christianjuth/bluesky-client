@@ -1,4 +1,4 @@
-import { getMyLikedPosts } from "@/lib/atp-client";
+import { getMyLikedPosts, getSession } from "@/lib/atp-client";
 import { Post } from "@/components/post";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { postsSchema } from "@/lib/schemas";
@@ -10,9 +10,11 @@ import { notFound } from "next/navigation";
 const SPLIT = 10;
 
 export default async function Posts() {
-  const posts = await getMyLikedPosts({ limit: 20 });
+  const session = await getSession();
 
-  if (!posts) {
+  const res = await getMyLikedPosts({ limit: 20 });
+
+  if (!res || !session) {
     notFound();
   }
 
@@ -20,7 +22,7 @@ export default async function Posts() {
   // Calling postsSchema.parse removes anything we don't need,
   // which prevents react from complaining about passing objects
   // with functions into client components.
-  const sanitizedPosts = postsSchema.parse(posts.data.posts);
+  const sanitizedPosts = postsSchema.parse(res.posts);
 
   const rscPosts = sanitizedPosts.slice(0, SPLIT);
   const restPosts = sanitizedPosts.slice(SPLIT);
@@ -30,7 +32,12 @@ export default async function Posts() {
       {rscPosts.map((post) => (
         <Post key={post.uri} post={post} />
       ))}
-      <VirtualizedPosts defaultPosts={restPosts.map((p) => ({ post: p }))} />
+      <VirtualizedPosts
+        defaultPosts={restPosts.map((p) => ({ post: p }))}
+        defaultCursor={res.cursor}
+        actor={session.handle}
+        mode="likes"
+      />
     </>
   );
 }

@@ -85,3 +85,8 @@ export const feedViewPostSchema = z
   .strip();
 
 export const feedViewPostsSchema = z.array(feedViewPostSchema);
+
+export const outputSchema = z.object({
+  feed: feedViewPostsSchema,
+  cursor: z.string().optional(),
+});

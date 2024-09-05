@@ -38,7 +38,6 @@ export default async function Pgae() {
             />
           )}
         </>
-        <div>Sidebar</div>
       </TemplateWithSidebar>
     </>
   );
