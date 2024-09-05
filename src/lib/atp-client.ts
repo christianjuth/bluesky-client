@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import z from "zod";
 import * as routes from "@/lib/routes";
 import { PostView } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
+import { cache } from "react";
 
 /**
  * Disable caching for now to prevent Next.js from
@@ -37,8 +38,6 @@ const sessionSchema = z.object({
   handle: z.string(),
 });
 
-let sessionCache: z.infer<typeof sessionSchema> | null = null;
-
 /**
  * This function assumes that it is called within a server component since
  * it extracts the session using next/headers cookies().
@@ -49,15 +48,7 @@ let sessionCache: z.infer<typeof sessionSchema> | null = null;
  * - Cache the session for future calls
  * - Reutrn user did (decentralized identifier) and handle
  */
-export const getSession = async () => {
-  if (sessionCache) {
-    return {
-      did: sessionCache.did,
-      handle: sessionCache.handle,
-      agent,
-    };
-  }
-
+export const getSession = cache(async () => {
   try {
     const { accessJwt, refreshJwt, did, handle } = sessionSchema.parse({
       accessJwt: cookies().get("accessJwt")?.value,
@@ -74,22 +65,14 @@ export const getSession = async () => {
       active: true,
     });
 
-    sessionCache = {
-      accessJwt,
-      refreshJwt,
-      did,
-      handle,
-    };
-
     return {
       did,
       handle,
-      agent,
     };
   } catch (e) {
     return null;
   }
-};
+});
 
 export const requireSession = async () => {
   const session = await getSession();
@@ -204,3 +187,10 @@ export const getDiscoveryFeed = async () => {
   const data = await res.json();
   return data as { posts: PostView[]; cursor: string };
 };
+
+export function logout() {
+  cookies().delete("accessJwt");
+  cookies().delete("refreshJwt");
+  cookies().delete("did");
+  cookies().delete("handle");
+}

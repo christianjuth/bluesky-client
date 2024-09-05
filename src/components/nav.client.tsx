@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as routes from "@/lib/routes";
+import { logout } from "./nav.server";
 
 import { HomeOutlined, PersonOutlined } from "@/components/icons";
 
@@ -42,7 +43,7 @@ export function Sidebar({ userId }: { userId?: string }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 h-full">
       {getSidebarLinks(userId).map(({ href, text, icon: Icon }) => (
         <Button
           key={href}
@@ -56,6 +57,17 @@ export function Sidebar({ userId }: { userId?: string }) {
           </Link>
         </Button>
       ))}
+
+      <div className="flex-1" />
+
+      {userId && (
+        <form action={logout}>
+          <Button variant="ghost">
+            {/* <Icon className="text-lg" /> */}
+            Logout
+          </Button>
+        </form>
+      )}
     </div>
   );
 }

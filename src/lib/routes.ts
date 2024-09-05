@@ -1,4 +1,5 @@
 export const auth = "/auth";
+export const logout = "/api/logout";
 
 export const user = (userId: string) => `/users/${userId}`;
 export const userPosts = (userId: string) => `/users/${userId}/posts`;
