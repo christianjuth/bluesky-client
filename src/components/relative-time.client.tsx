@@ -3,6 +3,12 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 dayjs.extend(relativeTime);
 
@@ -22,6 +28,15 @@ export function RelativeTime({ time }: { time: string }) {
   }, [time]);
 
   return relativeTime ? (
-    <time className="text-muted-foreground text-xs">{relativeTime}</time>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <time className="text-muted-foreground text-xs">{relativeTime}</time>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{dayjs(time).format("MMM D, YYYY h:mma")}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   ) : null;
 }

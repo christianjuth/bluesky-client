@@ -4,6 +4,9 @@ import { Post } from "@/components/post";
 import { feedViewPostsSchema } from "@/lib/schemas";
 import { ResetScroll } from "@/components/reset-scroll";
 import { ResetAboveThisPoint } from "@/components/track-scroll";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import * as routes from "@/lib/routes";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -39,12 +42,21 @@ export default async function Posts({
   const rscPosts = posts.slice(0, SPLIT);
   const restPosts = posts.slice(SPLIT);
 
+  const nextRscCursor = rscPosts[rscPosts.length - 1]?.post.record.createdAt;
+
   return (
     <>
       <ResetAboveThisPoint id={cursor} />
       {rscPosts.map(({ post, reason }) => (
         <Post key={post.uri} post={post} reason={reason} />
       ))}
+      <noscript>
+        <Button asChild>
+          <Link href={routes.user(params.userId) + `?cursor=${nextRscCursor}`}>
+            Next page
+          </Link>
+        </Button>
+      </noscript>
       <VirtualizedPosts
         defaultPosts={restPosts}
         defaultCursor={feed.data.cursor}

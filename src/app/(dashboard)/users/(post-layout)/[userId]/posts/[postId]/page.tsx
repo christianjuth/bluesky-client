@@ -4,6 +4,7 @@ import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { UserSidebar } from "@/components/user-sidebar";
+import { ResetAboveThisPoint } from "@/components/track-scroll";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -40,6 +41,7 @@ export default async function Page({
   return (
     <TemplateWithSidebar>
       <>
+        <ResetAboveThisPoint />
         <Post post={postData} />
         <hr className="h-px bg-border border-none" />
         {rscReplies.map(({ post }) => (

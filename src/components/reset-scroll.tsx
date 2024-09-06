@@ -13,7 +13,9 @@ export function ResetScroll({ offsetY }: { offsetY?: number }) {
 
   if (!disabledRef.current) {
     safeDisableScrollRestoration();
-    window.scrollTo(0, offsetY ?? 0);
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, offsetY ?? 0);
+    }
     disabledRef.current = true;
   }
 

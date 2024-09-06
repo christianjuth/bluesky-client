@@ -97,10 +97,10 @@ function EmbededPost({ post }: { post: z.infer<typeof embedPostSchema> }) {
 }
 
 function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
-  if (images.length === 2 || images.length === 4) {
+  if (images.length <= 2 || images.length >= 4) {
     return (
       <div className="grid grid-cols-2 gap-2">
-        {images.map((image, i) => (
+        {images.slice(0, 4).map((image, i) => (
           <div key={i} className="relative aspect-[1/1]">
             <Image
               src={image.fullsize}
@@ -178,10 +178,7 @@ export function Post({
 
   return (
     <TrackScroll id={createdAt}>
-      <div
-        className="py-4 px-4 md:px-2 space-y-2 relative hover:bg-accent/30"
-        id={id}
-      >
+      <div className="py-4 px-4 md:px-2 space-y-2 relative hover:bg-accent/30">
         {reasonRepost && (
           <span className="text-sm ml-8 -mb-1 flex items-center">
             <Repost className="text-lg mr-0.5" /> Reposted by{" "}

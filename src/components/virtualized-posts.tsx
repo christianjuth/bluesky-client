@@ -53,6 +53,12 @@ export function VirtualizedPosts({
   actor?: string;
   mode?: GetPostsParams["mode"];
 }) {
+  const [firstRender, setFirstRender] = useState(true);
+
+  useEffect(() => {
+    setFirstRender(false);
+  }, []);
+
   const [cursor, setCursor] = useState(defaultCursor);
   const [feed, setFeed] = useState(defaultPosts);
 
@@ -117,7 +123,7 @@ export function VirtualizedPosts({
       ref={parentRef}
       className="relative"
       style={{
-        height: virtualizer.getTotalSize(),
+        height: firstRender ? 0 : virtualizer.getTotalSize(),
       }}
     >
       <div
