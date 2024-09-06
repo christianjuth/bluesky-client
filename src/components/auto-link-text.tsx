@@ -1,7 +1,11 @@
 import LinkifyIt from "linkify-it";
-const linkify = new LinkifyIt();
 import Link from "next/link";
 import * as routes from "@/lib/routes";
+import tlds from "tlds";
+
+const linkify = new LinkifyIt();
+
+linkify.tlds(tlds);
 
 linkify.add("@", {
   validate: function (text, pos, self) {
@@ -86,7 +90,7 @@ export function AutoLinkText({ children }: { children: string }) {
             rel="noopener noreferrer"
             className="text-highlight hover:underline"
           >
-            {match.text}
+            {match.text.replace(/^https?:\/\//, "")}
           </a>,
         );
         break;

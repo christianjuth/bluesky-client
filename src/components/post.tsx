@@ -16,6 +16,7 @@ import { LikeButton } from "./like-button.client";
 import { AutoLinkText } from "./auto-link-text";
 import { getInitials } from "@/lib/format";
 import { TrackScroll } from "./track-scroll";
+import { UserWithHoverCard } from "./user-with-hover-card";
 import z from "zod";
 
 const imagesSchema = z.array(
@@ -86,10 +87,15 @@ function EmbededPost({ post }: { post: z.infer<typeof embedPostSchema> }) {
           <AvatarImage src={avatar} />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
-        <Link href={routes.user(post.author.handle)}>{post.author.handle}</Link>
+        <UserWithHoverCard account={post.author}>
+          <Link href={routes.user(post.author.handle)}>
+            {post.author.handle}
+          </Link>
+        </UserWithHoverCard>
         {createdAt && <RelativeTime time={createdAt} />}
       </div>
       <p className="whitespace-pre-line text-sm overflow-hidden text-ellipsis">
+        {/* TODO: handle facets */}
         {post.value.text}
       </p>
     </div>
@@ -138,23 +144,80 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
   }
 }
 
+// See: https://atproto.blue/en/latest/atproto/atproto_client.models.app.bsky.richtext.facet.html
+const textEncoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+function getPostBody(post: z.infer<typeof postSchema>) {
+  let recordText = "error";
+
+  if ("text" in post.record && typeof post.record.text === "string") {
+    recordText = post.record.text;
+  }
+
+  const text: React.ReactNode[] = [];
+
+  if (post.record.facets) {
+    const byteArray = textEncoder.encode(recordText);
+
+    const facetsSorted = post.record.facets.sort(
+      (a, b) => a.index.byteStart - b.index.byteStart,
+    );
+    let i = 0;
+
+    text.push(
+      decoder.decode(byteArray.slice(0, facetsSorted[0]?.index.byteStart)),
+    );
+
+    for (const facet of facetsSorted) {
+      const url = facet.features?.[0]?.uri;
+      const facetText = decoder.decode(
+        byteArray.slice(facet.index.byteStart, facet.index.byteEnd),
+      );
+
+      if (url) {
+        text.push(
+          <a
+            key={i}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-highlight hover:underline"
+          >
+            {facetText}
+          </a>,
+        );
+      } else {
+        text.push(facetText);
+      }
+
+      i = facet.index.byteEnd;
+    }
+
+    text.push(decoder.decode(byteArray.slice(i)));
+  } else {
+    text.push(recordText);
+  }
+
+  return text.map((t, i) => {
+    if (typeof t === "string") {
+      return <AutoLinkText key={i}>{t}</AutoLinkText>;
+    }
+    return t;
+  });
+}
+
 export function Post({
   post,
   reply,
   reason,
 }: {
-  post: z.infer<typeof postSchema> | PostView;
+  post: z.infer<typeof postSchema>;
   reply?: ReplyRef;
   reason?: {
     [k: string]: unknown;
   };
 }) {
-  let text = "error";
-
-  if ("text" in post.record && typeof post.record.text === "string") {
-    text = post.record.text;
-  }
-
   const avatar = post.author.avatar;
 
   const parent = reply?.parent ?? {};
@@ -191,9 +254,11 @@ export function Post({
             <AvatarImage src={avatar} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
-          <Link href={routes.user(post.author.handle)}>
-            {post.author.handle}
-          </Link>
+          <UserWithHoverCard account={post.author}>
+            <Link href={routes.user(post.author.handle)}>
+              {post.author.handle}
+            </Link>
+          </UserWithHoverCard>
           {createdAt && <RelativeTime time={createdAt} />}
         </div>
         <div className="pl-8 space-y-3">
@@ -209,7 +274,7 @@ export function Post({
           )}
 
           <p className="whitespace-pre-line overflow-hidden text-ellipsis">
-            <AutoLinkText>{text}</AutoLinkText>
+            {getPostBody(post)}
           </p>
 
           {embedPost && <EmbededPost post={embedPost} />}

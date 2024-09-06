@@ -1,6 +1,6 @@
 import z from "zod";
 
-const accountSchema = z
+export const accountSchema = z
   .object({
     did: z.string(),
     handle: z.string(),
@@ -9,6 +9,10 @@ const accountSchema = z
     // associated: z.object({}),
     // labels: z.array(z.unknown()),
     createdAt: z.string().optional(),
+    followersCount: z.number().optional(),
+    followsCount: z.number().optional(),
+    postsCount: z.number().optional(),
+    description: z.string().optional(),
   })
   .strip();
 
@@ -81,6 +85,24 @@ export const postSchema = z
       .object({
         text: z.string().optional(),
         createdAt: z.string().optional(),
+        facets: z
+          .array(
+            z.object({
+              features: z
+                .array(
+                  z.object({
+                    uri: z.string().optional(),
+                  }),
+                )
+                .optional(),
+              index: z.object({
+                byteEnd: z.number(),
+                byteStart: z.number(),
+              }),
+            }),
+          )
+          .optional()
+          .catch(() => undefined),
       })
       .strip(),
     embed: z
