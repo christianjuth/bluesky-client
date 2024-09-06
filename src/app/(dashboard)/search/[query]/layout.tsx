@@ -18,6 +18,10 @@ export default function Layout({
       href: routes.searchUsers(params.query),
       label: "Users",
     },
+    {
+      href: routes.searchHashtags(params.query),
+      label: "Hashtags",
+    },
   ];
 
   return (

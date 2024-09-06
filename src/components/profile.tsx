@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ProfileView } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import Link from "next/link";
 import * as routes from "@/lib/routes";
+import { AutoLinkText } from "./auto-link-text";
 
 export function Profile({ profile }: { profile: ProfileView }) {
   const initials = (profile.displayName ?? profile.handle)
@@ -14,11 +15,11 @@ export function Profile({ profile }: { profile: ProfileView }) {
   const avatar = profile.avatar;
 
   return (
-    <Link
-      className="py-4 px-4 md:px-2 space-y-1"
-      href={routes.user(profile.handle)}
-    >
-      <div className="flex flex-row space-x-2 items-center">
+    <div className="py-4 px-4 md:px-2 space-y-1">
+      <Link
+        className="flex flex-row space-x-2 items-center"
+        href={routes.user(profile.handle)}
+      >
         <Avatar className="h-10 w-10">
           <AvatarImage src={avatar} />
           <AvatarFallback>{initials}</AvatarFallback>
@@ -28,8 +29,12 @@ export function Profile({ profile }: { profile: ProfileView }) {
           <p className="font-bold">{profile.displayName ?? profile.handle}</p>
           <p className="text-muted-foreground -mt-0.5">u/{profile.handle}</p>
         </div>
-      </div>
-      <p className="pl-12 text-sm">{profile.description}</p>
-    </Link>
+      </Link>
+      {profile.description && (
+        <p className="pl-12 text-sm">
+          <AutoLinkText>{profile.description}</AutoLinkText>
+        </p>
+      )}
+    </div>
   );
 }

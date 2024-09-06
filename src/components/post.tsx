@@ -15,6 +15,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { LikeButton } from "./like-button.client";
 
+import { AutoLinkText } from "./auto-link-text";
+
 import z from "zod";
 
 const imagesSchema = z.array(
@@ -175,7 +177,9 @@ export function Post({
           </div>
         )}
 
-        <p className="overflow-hidden text-ellipsis">{text}</p>
+        <p className="overflow-hidden text-ellipsis">
+          <AutoLinkText>{text}</AutoLinkText>
+        </p>
 
         {images && <Images images={images} />}
 

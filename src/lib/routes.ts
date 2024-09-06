@@ -15,3 +15,4 @@ export const search = "/search";
 
 export const searchPosts = (query: string) => `/search/${query}`;
 export const searchUsers = (query: string) => `/search/${query}/users`;
+export const searchHashtags = (query: string) => `/search/${query}/hashtags`;

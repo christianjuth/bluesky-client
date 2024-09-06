@@ -170,6 +170,20 @@ export const searchPosts = async (params: { query: string; limit: number }) => {
   return data as { posts: PostView[]; cursor: string };
 };
 
+export const searchHashtags = async (params: {
+  query: string;
+  limit: number;
+}) => {
+  const res = await fetch(
+    `https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?tag=${params.query}&q=${params.query}`,
+    {
+      cache: "no-store",
+    },
+  );
+  const data = await res.json();
+  return data as { posts: PostView[]; cursor: string };
+};
+
 const REVALIDATE_DISCOVER_INTERVAL = 60;
 export const getDiscoveryFeed = async () => {
   const randomString = randomTimeIntervalStabalizedString(

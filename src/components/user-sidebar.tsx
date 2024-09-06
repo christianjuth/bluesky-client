@@ -2,6 +2,7 @@ import { ProfileViewDetailed } from "@atproto/api/dist/client/types/app/bsky/act
 import Image from "next/image";
 import dayjs from "dayjs";
 import { abbriviateNumber } from "@/lib/format";
+import { AutoLinkText } from "./auto-link-text";
 
 export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
   return (
@@ -20,7 +21,9 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
 
       <div className="p-4 border-x border-b rounded-b-xl">
         {profile.description && (
-          <p className="overflow-hidden text-ellipsis">{profile.description}</p>
+          <p className="overflow-hidden text-ellipsis">
+            <AutoLinkText>{profile.description}</AutoLinkText>
+          </p>
         )}
 
         {/* Stats */}
