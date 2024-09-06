@@ -9,3 +9,15 @@ export function abbriviateNumber(number: number) {
 
   return `${Math.floor(number / 100000) / 10}m`;
 }
+
+export function getInitials(name: string) {
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .filter((n) => /^[A-Z]/i.test(n))
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  return initials;
+}

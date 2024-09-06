@@ -110,6 +110,8 @@ export function VirtualizedPosts({
     }
   }, [loadingMore, cursor, actor, mode]);
 
+  const translateY = (items[0]?.start ?? 0) - parentOffsetRef.current;
+
   return (
     <div
       ref={parentRef}
@@ -121,7 +123,7 @@ export function VirtualizedPosts({
       <div
         className="absolute w-full top-0 left-0"
         style={{
-          transform: `translateY(${items[0]?.start - parentOffsetRef.current ?? 0}px)`,
+          transform: `translateY(${translateY ?? 0}px)`,
         }}
       >
         {items.map((virtualRow) => (

@@ -19,7 +19,7 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
         )}
       </div>
 
-      <div className="p-4 border-x border-b rounded-b-xl">
+      <div className="p-4 border-x border-b rounded-b-xl space-y-3">
         {profile.description && (
           <p className="overflow-hidden text-ellipsis">
             <AutoLinkText>{profile.description}</AutoLinkText>
@@ -27,7 +27,7 @@ export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-y-4 gap-x-10">
+        <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col">
             <span>
               {profile.followsCount !== undefined

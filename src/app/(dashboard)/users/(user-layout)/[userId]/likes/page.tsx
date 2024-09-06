@@ -3,16 +3,25 @@ import { Post } from "@/components/post";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { postsSchema } from "@/lib/schemas";
 import { notFound } from "next/navigation";
+import { ResetScroll } from "@/components/reset-scroll";
+import { ResetAboveThisPoint } from "@/components/track-scroll";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
 // the first n items to be rendered immediately, without JS.
 const SPLIT = 10;
 
-export default async function Posts() {
+export default async function Posts({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const cursor =
+    typeof searchParams.cursor === "string" ? searchParams.cursor : undefined;
+
   const session = await getSession();
 
-  const res = await getMyLikedPosts({ limit: 20 });
+  const res = await getMyLikedPosts({ limit: 20, cursor });
 
   if (!res || !session) {
     notFound();
@@ -29,6 +38,7 @@ export default async function Posts() {
 
   return (
     <>
+      <ResetAboveThisPoint id={cursor} />
       {rscPosts.map((post) => (
         <Post key={post.uri} post={post} />
       ))}
@@ -38,6 +48,7 @@ export default async function Posts() {
         actor={session.handle}
         mode="likes"
       />
+      {cursor && <ResetScroll offsetY={150} />}
     </>
   );
 }

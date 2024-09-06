@@ -1701,6 +1701,7 @@ __metadata:
     tailwindcss: "npm:^3.4.1"
     tailwindcss-animate: "npm:^1.0.7"
     typescript: "npm:^5"
+    use-debounce: "npm:^10.0.3"
     utility-types: "npm:^3.11.0"
     zod: "npm:^3.23.8"
     zod-form-data: "npm:^2.0.2"
@@ -5706,6 +5707,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/d232c37160fe3970c99255da19b5fb5299fb5926a5d6141d928a87feb47732c323d29be2f8137d3b1e5499c70d284cd1d9cfad703cc58179db8be24d7dd8f1f2
+  languageName: node
+  linkType: hard
+
+"use-debounce@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "use-debounce@npm:10.0.3"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/351b62c565d6dce5a21ecc21fe3e1f8db74f70c81c8f7d9dbdfc2da1cb82d883578589f6146e684d91dac534bc3c8b145ab1a36fbf4d44cbb4113827508b39aa
   languageName: node
   linkType: hard
 

@@ -1,10 +1,10 @@
 import { getSession, publicAgent } from "@/lib/atp-client";
 import { UserSidebar } from "@/components/user-sidebar";
-import { ProfileNavbar } from "./profile-navbar";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PillNavbar } from "@/components/pill-navbar";
 import * as routes from "@/lib/routes";
+import { getInitials } from "@/lib/format";
 
 export default async function Layout({
   children,
@@ -23,12 +23,7 @@ export default async function Layout({
 
   const avatar = profile.data.avatar;
 
-  const initials = (profile.data.displayName ?? profile.data.handle)
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const initials = getInitials(profile.data.displayName ?? profile.data.handle);
 
   const links = [
     { href: routes.user(params.userId), label: "Overview" },

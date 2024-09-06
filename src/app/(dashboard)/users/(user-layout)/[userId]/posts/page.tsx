@@ -2,6 +2,8 @@ import { agent, getSession, publicAgent } from "@/lib/atp-client";
 import { Post } from "@/components/post";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { feedViewPostsSchema } from "@/lib/schemas";
+import { ResetScroll } from "@/components/reset-scroll";
+import { ResetAboveThisPoint } from "@/components/track-scroll";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -10,9 +12,14 @@ const SPLIT = 10;
 
 export default async function Posts({
   params,
+  searchParams,
 }: {
   params: { userId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const cursor =
+    typeof searchParams.cursor === "string" ? searchParams.cursor : undefined;
+
   const userId = decodeURIComponent(params.userId);
 
   const session = await getSession();
@@ -21,6 +28,7 @@ export default async function Posts({
     actor: userId,
     limit: 30,
     filter: "posts_no_replies",
+    cursor,
   });
 
   // The data we get seems to contain some helper functions.
@@ -34,6 +42,7 @@ export default async function Posts({
 
   return (
     <>
+      <ResetAboveThisPoint id={cursor} />
       {rscPosts.map(({ post, reason }) => (
         <Post key={post.uri} post={post} reason={reason} />
       ))}
@@ -43,6 +52,7 @@ export default async function Posts({
         actor={userId}
         mode="posts"
       />
+      {cursor && <ResetScroll offsetY={150} />}
     </>
   );
 }
