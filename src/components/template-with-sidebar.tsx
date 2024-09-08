@@ -7,9 +7,9 @@ export function TemplateWithSidebar({
   return (
     <div className="flex flex-row justify-center space-x-4">
       <div className="flex-1 max-w-[60ch] pt-4">{main}</div>
-      {sidebar && (
-        <div className="sticky top-14 pt-4 h-min max-md:hidden">{sidebar}</div>
-      )}
+      <div className="sticky top-14 pt-4 h-min max-md:hidden w-60">
+        {sidebar}
+      </div>
     </div>
   );
 }

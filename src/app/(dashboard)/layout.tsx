@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/atp-client";
+import { getPopularFeedGenerators, getSession } from "@/lib/atp-client";
 import { BottomTabNavigator, Sidebar } from "@/components/nav.client";
 import Link from "next/link";
 import { ModeToggle } from "@/components/theme-mode-toggle";
@@ -11,6 +11,10 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const user = await getSession();
+
+  const popularFeedGenerators = await getPopularFeedGenerators({
+    limit: 30,
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -28,8 +32,8 @@ export default async function Layout({
 
       <div className="h-14" />
 
-      <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-4 max-md:hidden">
-        <Sidebar userId={user?.handle} />
+      <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-6 max-md:hidden overflow-y-auto">
+        <Sidebar userId={user?.handle} feedGenerators={popularFeedGenerators} />
       </aside>
 
       <main className="w-full mx-auto md:pl-60">{children}</main>

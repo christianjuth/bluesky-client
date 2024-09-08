@@ -210,6 +210,27 @@ export const getPopularFeedGenerators = async (params: {
   return feedGeneratorsSchema.parse(data);
 };
 
+export const actorFeeds = async (params: {
+  actor: string;
+  limit?: number;
+  cursor?: string;
+}) => {
+  const queryParams = new URLSearchParams();
+  queryParams.append("actor", params.actor);
+  queryParams.append("limit", String(params.limit ?? 20));
+  if (params.cursor) {
+    queryParams.append("cursor", params.cursor);
+  }
+  const res = await fetch(
+    `https://public.api.bsky.app/xrpc/app.bsky.feed.getActorFeeds?${queryParams.toString()}`,
+    {
+      cache: "no-store",
+    },
+  );
+  const data = await res.json();
+  return feedGeneratorsSchema.parse(data);
+};
+
 export const getFeedGenerator = async (params: {
   /**
    * The URI of the feed generator.

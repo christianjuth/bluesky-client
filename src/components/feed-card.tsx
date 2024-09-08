@@ -14,39 +14,38 @@ export function FeedCard({
   className?: string;
 }) {
   return (
-    <Link
-      className={cn("py-2 flex flex-col space-y-1 text-sm", className)}
-      href={`/?feed=${feed.uri}`}
-    >
-      <div
-        className={cn(
-          "grid grid-cols-[min-content_1fr] space-x-2",
-          !feed.avatar && "grid-cols-1",
-        )}
-      >
-        {feed.avatar && (
-          <div className="relative aspect-square">
-            <Image
-              src={feed.avatar}
-              alt={feed.displayName}
-              className="rounded-lg"
-              fill
-            />
+    <div className={cn("py-2 flex flex-col space-y-1 text-sm", className)}>
+      <Link href={`/?feed=${feed.uri}`}>
+        <div
+          className={cn(
+            "grid grid-cols-[min-content_1fr] space-x-2",
+            !feed.avatar && "grid-cols-1",
+          )}
+        >
+          {feed.avatar && (
+            <div className="relative aspect-square">
+              <Image
+                src={feed.avatar}
+                alt={feed.displayName}
+                className="rounded-lg"
+                fill
+              />
+            </div>
+          )}
+          <div className="flex flex-col">
+            <span className="font-bold">{feed.displayName}</span>
+            <span className="text-muted-foreground -mt-0.5">
+              Feed by @{feed.creator.handle}
+            </span>
           </div>
-        )}
-        <div className="flex flex-col">
-          <span className="font-bold">{feed.displayName}</span>
-          <span className="text-muted-foreground -mt-0.5">
-            Feed by @{feed.creator.handle}
-          </span>
         </div>
-      </div>
-      <p>
+      </Link>
+      <div>
         <AutoLinkText>{feed.description}</AutoLinkText>
-      </p>
+      </div>
       <span className="text-muted-foreground">
         Liked by {abbriviateNumber(feed.likeCount)} users
       </span>
-    </Link>
+    </div>
   );
 }

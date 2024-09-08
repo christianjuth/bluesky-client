@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as routes from "@/lib/routes";
 import { logout } from "./nav.server";
+import { feedGeneratorsSchema } from "@/lib/schemas";
+import z from "zod";
 
 import { HomeOutlined, PersonOutlined } from "@/components/icons";
 
@@ -44,35 +46,60 @@ const matchPaths = (target: string, current: string) => {
   return current.indexOf(target) === 0;
 };
 
-export function Sidebar({ userId }: { userId?: string }) {
+export async function Sidebar({
+  userId,
+  feedGenerators,
+}: {
+  userId?: string;
+  feedGenerators: z.infer<typeof feedGeneratorsSchema>;
+}) {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col gap-2 h-full">
-      {getSidebarLinks(userId).map(({ href, text, icon: Icon }) => (
-        <Button
-          key={href}
-          asChild
-          variant={matchPaths(href, pathname) ? "default" : "ghost"}
-          className="justify-start"
-        >
-          <Link href={href}>
-            <Icon className="mr-1.5 text-lg" />
-            {text}
-          </Link>
-        </Button>
-      ))}
-
-      <div className="flex-1" />
-
-      {userId && (
-        <form action={logout}>
-          <Button variant="ghost">
-            {/* <Icon className="text-lg" /> */}
-            Logout
+    <div className="flex flex-col justify-between gap-12 min-h-full">
+      <div className="flex flex-col space-y-1">
+        {getSidebarLinks(userId).map(({ href, text, icon: Icon }) => (
+          <Button
+            key={href}
+            asChild
+            variant={matchPaths(href, pathname) ? "default" : "ghost"}
+            className="mr-2 justify-start px-4 -mx-4"
+          >
+            <Link href={href}>
+              <Icon className="mr-1.5 text-lg" />
+              {text}
+            </Link>
           </Button>
-        </form>
-      )}
+        ))}
+      </div>
+
+      <div className="flex flex-col space-y-1">
+        <div className="uppercase text-muted-foreground text-sm">
+          Popular Feeds
+        </div>
+        {feedGenerators.feeds.map((feed) => (
+          <Button
+            key={feed.uri}
+            asChild
+            size="sm"
+            variant="ghost"
+            className="mr-2 justify-start px-4 -mx-4"
+          >
+            <Link href={`/?feed=${feed.uri}`}>{feed.displayName}</Link>
+          </Button>
+        ))}
+      </div>
+
+      <div>
+        {userId && (
+          <form action={logout}>
+            <Button variant="ghost" className="justify-start px-4 -mx-4">
+              {/* <Icon className="text-lg" /> */}
+              Logout
+            </Button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

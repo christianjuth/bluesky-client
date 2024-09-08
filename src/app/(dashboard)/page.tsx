@@ -2,7 +2,7 @@ import {
   getSession,
   getDiscoveryFeed,
   getFeedGenerator,
-  getPopularFeedGenerators,
+  getActorFeeds,
 } from "@/lib/atp-client";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
@@ -10,6 +10,7 @@ import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { FeedCard } from "@/components/feed-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Byline, ProfileDescription } from "@/components/profile";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -31,12 +32,14 @@ export default async function Page({
       ? searchParams.feed
       : DEFAULT_FEED_URI;
 
-  const popularFeedGenerators = await getPopularFeedGenerators({
-    limit: 30,
-  });
-
   const feedGenerator = await getFeedGenerator({
     feed: feedUri,
+  });
+
+  const actor = feedGenerator.creator.did;
+
+  const popularFeedGenerators = await getActorFeeds({
+    actor,
   });
 
   const discoveryFeed = await getDiscoveryFeed({
@@ -62,19 +65,28 @@ export default async function Page({
           />
         )}
       </>
-      <div className="w-80 -mr-20 p-4 border rounded-xl space-y-2">
-        <div>This feed</div>
-        {popularFeedGenerators.feeds.map((feed) => (
-          <Button
-            key={feed.uri}
-            asChild
-            size="sm"
-            variant="outline"
-            className="mr-2"
-          >
-            <Link href={`?feed=${feed.uri}`}>{feed.displayName}</Link>
-          </Button>
-        ))}
+      <div className="w-80 -mr-20 p-4 border rounded-xl space-y-5 flex flex-col">
+        <div className="space-y-2">
+          <div className="text-muted-foreground uppercase text-sm">
+            Feed creator
+          </div>
+          <Byline profile={feedGenerator.creator} />
+          <ProfileDescription
+            profile={feedGenerator.creator}
+            className="text-sm"
+          />
+        </div>
+
+        <div className="flex flex-col items-start space-y-2">
+          <div className="text-muted-foreground">
+            Other feeds by @{feedGenerator.creator.handle}
+          </div>
+          {popularFeedGenerators.feeds.map((feed) => (
+            <Button key={feed.uri} asChild size="sm" variant="outline">
+              <Link href={`?feed=${feed.uri}`}>{feed.displayName}</Link>
+            </Button>
+          ))}
+        </div>
       </div>
     </TemplateWithSidebar>
   );
