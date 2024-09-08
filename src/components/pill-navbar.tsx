@@ -21,6 +21,7 @@ export function PillNavbar({ links }: { links: Link[] }) {
               key={link.href}
               asChild
               variant={link.href === pathname ? "default" : "outline"}
+              size="sm"
             >
               <Link href={link.href}>{link.label}</Link>
             </Button>

@@ -7,7 +7,7 @@ import * as routes from "@/lib/routes";
 import { RelativeTime } from "./relative-time.client";
 import { cn } from "@/lib/utils";
 import { abbriviateNumber } from "@/lib/format";
-import { postSchema, embedPostSchema } from "@/lib/schemas";
+import { postSchema, embedPostSchema, externalEmbed } from "@/lib/schemas";
 import { Repost, ReplyOutlined } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
@@ -80,6 +80,8 @@ function EmbededPost({ post }: { post: z.infer<typeof embedPostSchema> }) {
   const initials = getInitials(post.author.displayName ?? post.author.handle);
   const createdAt = post.value.createdAt;
 
+  const id = post.uri.split("/").pop();
+
   return (
     <div className="border p-3 rounded-md flex flex-col space-y-2 bg-card">
       <div className="flex flex-row space-x-2 items-center text-sm">
@@ -94,16 +96,36 @@ function EmbededPost({ post }: { post: z.infer<typeof embedPostSchema> }) {
         </UserWithHoverCard>
         {createdAt && <RelativeTime time={createdAt} />}
       </div>
-      <p className="whitespace-pre-line text-sm overflow-hidden text-ellipsis">
-        {/* TODO: handle facets */}
-        {post.value.text}
-      </p>
+      <Link href={`/users/${post.author.handle}/posts/${id}`}>
+        <p className="whitespace-pre-line text-sm overflow-hidden text-ellipsis">
+          {/* TODO: handle facets */}
+          {post.value.text}
+        </p>
+      </Link>
+
+      {post.embeds?.map(({ external }) =>
+        external ? (
+          <EmbedExternal external={external} key={external.uri} />
+        ) : null,
+      )}
     </div>
   );
 }
 
 function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
-  if (images.length <= 2 || images.length >= 4) {
+  if (images.length === 1) {
+    return (
+      <Image
+        src={images[0].fullsize}
+        alt={images[0].alt}
+        height={images[0].aspectRatio.height}
+        width={images[0].aspectRatio.width}
+        className="rounded-lg"
+      />
+    );
+  }
+
+  if (images.length == 2 || images.length >= 4) {
     return (
       <div className="grid grid-cols-2 gap-2">
         {images.slice(0, 4).map((image, i) => (
@@ -207,6 +229,32 @@ function getPostBody(post: z.infer<typeof postSchema>) {
   });
 }
 
+function EmbedExternal({
+  external,
+}: {
+  external: z.infer<typeof externalEmbed>;
+}) {
+  if (!external) {
+    return null;
+  }
+  return (
+    <a href={external.uri} target="_blank" rel="noopener noreferrer">
+      <div className="aspect-video relative">
+        <Image
+          src={external.thumb}
+          alt={external.title}
+          fill
+          className="rounded-t-md object-cover"
+        />
+      </div>
+      <div className="rounded-b-md border-x border-b py-2 px-3 space-y-0.5">
+        <span className="font-bold">{external.title}</span>
+        <p className="line-clamp-2 text-sm">{external.description}</p>
+      </div>
+    </a>
+  );
+}
+
 export function Post({
   post,
   reply,
@@ -250,13 +298,16 @@ export function Post({
         )}
         {/* Byline */}
         <div className="flex flex-row space-x-2 items-center text-sm">
-          <Avatar className="h-6 w-6">
-            <AvatarImage src={avatar} />
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
           <UserWithHoverCard account={post.author}>
-            <Link href={routes.user(post.author.handle)}>
-              {post.author.handle}
+            <Link
+              href={routes.user(post.author.handle)}
+              className="flex flex-row space-x-2 items-center"
+            >
+              <Avatar className="h-6 w-6">
+                <AvatarImage src={avatar} />
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+              <span>{post.author.handle}</span>
             </Link>
           </UserWithHoverCard>
           {createdAt && <RelativeTime time={createdAt} />}
@@ -278,6 +329,10 @@ export function Post({
           </p>
 
           {embedPost && <EmbededPost post={embedPost} />}
+
+          {post.embed?.external && (
+            <EmbedExternal external={post.embed.external} />
+          )}
 
           {images && <Images images={images} />}
 

@@ -14,6 +14,11 @@ const getSidebarLinks = (userId?: string) => [
     text: "Home",
     icon: HomeOutlined,
   },
+  {
+    href: routes.feeds,
+    text: "Feeds",
+    icon: HomeOutlined,
+  },
   ...(userId
     ? [
         {

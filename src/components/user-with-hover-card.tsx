@@ -22,7 +22,7 @@ export function UserWithHoverCard({
   account: z.infer<typeof accountSchema>;
   children: React.ReactNode;
 }) {
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
   const { data } = useFetch<UserGetResponse>(
     `/api/user?userId=${account.handle}`,
@@ -39,8 +39,8 @@ export function UserWithHoverCard({
   account = data?.user ?? account;
 
   return (
-    <HoverCard openDelay={disabled ? 2000 : 500} closeDelay={50}>
-      <HoverCardTrigger onMouseOver={() => setDisabled(false)} asChild>
+    <HoverCard openDelay={500} closeDelay={50}>
+      <HoverCardTrigger onMouseEnter={() => setDisabled(false)} asChild>
         {children}
       </HoverCardTrigger>
       <HoverCardContent>

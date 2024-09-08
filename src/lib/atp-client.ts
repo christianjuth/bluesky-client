@@ -5,6 +5,11 @@ import z from "zod";
 import * as routes from "@/lib/routes";
 import { PostView } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { cache } from "react";
+import {
+  outputSchema,
+  feedGeneratorsSchema,
+  feedGeneratorSchema,
+} from "./schemas";
 
 /**
  * Disable caching for now to prevent Next.js from
@@ -15,20 +20,22 @@ import { cache } from "react";
 export const agent = new AtpAgent({
   service: "https://bsky.social",
   // service: 'https://public.api.bsky.app',
-  fetch: (input, init) =>
-    fetch(input, {
+  fetch: (input, init) => {
+    return fetch(input, {
       ...init,
       cache: "no-store",
-    }),
+    });
+  },
 });
 
 export const publicAgent = new AtpAgent({
   service: "https://public.api.bsky.app",
-  fetch: (input, init) =>
-    fetch(input, {
+  fetch: (input, init) => {
+    return fetch(input, {
       ...init,
       cache: "no-store",
-    }),
+    });
+  },
 });
 
 const sessionSchema = z.object({
@@ -184,22 +191,72 @@ export const searchHashtags = async (params: {
   return data as { posts: PostView[]; cursor: string };
 };
 
-const REVALIDATE_DISCOVER_INTERVAL = 60;
-export const getDiscoveryFeed = async () => {
-  const randomString = randomTimeIntervalStabalizedString(
-    REVALIDATE_DISCOVER_INTERVAL,
-    3,
-  );
+export const getPopularFeedGenerators = async (params: {
+  limit?: number;
+  cursor?: string;
+}) => {
+  const queryParams = new URLSearchParams();
+  queryParams.append("limit", String(params.limit ?? 20));
+  if (params.cursor) {
+    queryParams.append("cursor", params.cursor);
+  }
   const res = await fetch(
-    `https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=${randomString}`,
+    `https://public.api.bsky.app/xrpc/app.bsky.unspecced.getPopularFeedGenerators?${queryParams.toString()}`,
     {
-      next: {
-        revalidate: REVALIDATE_DISCOVER_INTERVAL,
-      },
+      cache: "no-store",
     },
   );
   const data = await res.json();
-  return data as { posts: PostView[]; cursor: string };
+  return feedGeneratorsSchema.parse(data);
+};
+
+export const getFeedGenerator = async (params: {
+  /**
+   * The URI of the feed generator.
+   */
+  feed: string;
+  limit?: number;
+  cursor?: string;
+}) => {
+  const res = await publicAgent.com._client.call(
+    "app.bsky.feed.getFeedGenerator",
+    {
+      feed: params.feed,
+    },
+  );
+  return feedGeneratorSchema.parse(res.data.view);
+};
+
+export const getActorFeeds = async (params: {
+  actor: string;
+  limit?: number;
+  cursor?: string;
+}) => {
+  const queryParams = new URLSearchParams();
+  queryParams.append("actor", params.actor);
+  queryParams.append("limit", String(params.limit ?? 20));
+  if (params.cursor) {
+    queryParams.append("cursor", params.cursor);
+  }
+  const res = await fetch(
+    `https://public.api.bsky.app/xrpc/app.bsky.feed.getActorFeeds?${queryParams.toString()}`,
+    {
+      cache: "no-store",
+    },
+  );
+  const data = await res.json();
+  return feedGeneratorsSchema.parse(data);
+};
+
+export const getDiscoveryFeed = async ({ uri }: { uri: string }) => {
+  const session = await getSession();
+  const res = await (session ? agent : publicAgent).com._client.call(
+    "app.bsky.feed.getFeed",
+    {
+      feed: uri,
+    },
+  );
+  return outputSchema.parse(res.data);
 };
 
 export function logout() {

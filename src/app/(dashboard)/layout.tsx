@@ -28,11 +28,11 @@ export default async function Layout({
 
       <div className="h-14" />
 
-      <aside className="fixed left-0 bottom-0 w-40 border-r top-14 p-4 max-md:hidden">
+      <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-4 max-md:hidden">
         <Sidebar userId={user?.handle} />
       </aside>
 
-      <main className="w-full mx-auto md:pl-44">{children}</main>
+      <main className="w-full mx-auto md:pl-60">{children}</main>
 
       <BottomTabNavigator />
     </div>

@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PillNavbar } from "@/components/pill-navbar";
 import * as routes from "@/lib/routes";
 import { getInitials } from "@/lib/format";
+import { Button } from "@/components/ui/button";
 
 export default async function Layout({
   children,
@@ -50,6 +51,8 @@ export default async function Layout({
               </p>
               <p className="text-muted-foreground">u/{profile.data.handle}</p>
             </div>
+
+            <Button>Follow</Button>
           </div>
 
           <PillNavbar links={links} />
