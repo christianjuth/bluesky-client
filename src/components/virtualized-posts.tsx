@@ -47,11 +47,13 @@ export function VirtualizedPosts({
   defaultCursor,
   actor,
   mode,
+  feedUri,
 }: {
   defaultPosts: z.infer<typeof feedViewPostSchema>[];
   defaultCursor?: string;
   actor?: string;
   mode?: GetPostsParams["mode"];
+  feedUri?: string;
 }) {
   const [firstRender, setFirstRender] = useState(true);
 
@@ -89,12 +91,22 @@ export function VirtualizedPosts({
   }
 
   useEffect(() => {
-    if (loadingMore && cursor && actor && mode) {
+    if (loadingMore && cursor && (actor || feed) && mode) {
       let locked = false;
       const abortController = new AbortController();
 
+      const urlParmas = new URLSearchParams();
+      if (actor) {
+        urlParmas.set("userId", actor);
+      }
+      urlParmas.set("mode", mode);
+      urlParmas.set("cursor", cursor);
+      if (feedUri) {
+        urlParmas.set("feedUri", feedUri);
+      }
+
       try {
-        fetch(`/api/posts?userId=${actor}&mode=${mode}&cursor=${cursor}`, {
+        fetch(`/api/posts?${urlParmas.toString()}`, {
           signal: abortController.signal,
         })
           .then((res) => res.json())
@@ -114,7 +126,7 @@ export function VirtualizedPosts({
         abortController.abort();
       };
     }
-  }, [loadingMore, cursor, actor, mode]);
+  }, [loadingMore, cursor, actor, mode, feedUri]);
 
   const translateY = (items[0]?.start ?? 0) - parentOffsetRef.current;
 

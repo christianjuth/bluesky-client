@@ -144,7 +144,7 @@ export function BottomTabNavigator({ userId }: { userId?: string }) {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-14 border-t flex flex-row items-center justify-between px-4 bg-background/70 z-20 backdrop-blur md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 h-14 border-t flex flex-row items-center justify-between px-4 bg-background/80 z-20 backdrop-blur md:hidden">
       {getSidebarLinks(userId).map(({ href, icon: Icon }) => (
         <Button
           key={href}
@@ -169,8 +169,8 @@ export function Drawer({
 }) {
   return (
     <Sheet>
-      <SheetTrigger>
-        <Menu />
+      <SheetTrigger className="md:hidden">
+        <Menu className="mr-3" />
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
         <div className="overflow-y-auto h-full p-6">

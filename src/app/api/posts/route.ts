@@ -3,6 +3,7 @@ import {
   agent,
   publicAgent,
   getMyLikedPosts,
+  getDiscoveryFeed,
 } from "@/lib/atp-client";
 import { outputSchema } from "@/lib/schemas";
 import { type NextRequest, NextResponse } from "next/server";
@@ -10,17 +11,27 @@ import { InferNextResponseJSON } from "@/lib/type-utils";
 import { type AtpAgent } from "@atproto/api";
 import z from "zod";
 
-const searchParamsSchema = z.object({
-  cursor: z.string().optional(),
-  mode: z.union([
-    z.literal("overview"),
-    z.literal("posts"),
-    z.literal("replies"),
-    z.literal("likes"),
-  ]),
-  userId: z.string(),
-  limit: z.number().optional(),
-});
+const searchParamsSchema = z.union([
+  z.object({
+    cursor: z.string().optional(),
+    mode: z.union([
+      z.literal("overview"),
+      z.literal("posts"),
+      z.literal("replies"),
+      z.literal("likes"),
+    ]),
+    userId: z.string(),
+    feedUri: z.undefined(),
+    limit: z.number().optional(),
+  }),
+  z.object({
+    cursor: z.string().optional(),
+    mode: z.literal("feed"),
+    userId: z.undefined(),
+    feedUri: z.string(),
+    limit: z.number().optional(),
+  }),
+]);
 
 async function getAuthorFeed(
   agent: AtpAgent,
@@ -98,11 +109,13 @@ export async function GET(request: NextRequest) {
       cursor,
       mode,
       userId,
+      feedUri,
       limit = 30,
     } = searchParamsSchema.parse({
       cursor: searchParams.get("cursor") ?? undefined,
-      mode: searchParams.get("mode"),
-      userId: decodeURIComponent(searchParams.get("userId") ?? ""),
+      mode: searchParams.get("mode") ?? undefined,
+      feedUri: searchParams.get("feedUri") ?? undefined,
+      userId: searchParams.get("userId") ?? undefined,
     });
 
     const selectedAgent = session ? agent : publicAgent;
@@ -128,6 +141,14 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
           await getPosts(selectedAgent, {
             actor: userId,
+            limit,
+            cursor,
+          }),
+        );
+      case "feed":
+        return NextResponse.json(
+          await getDiscoveryFeed({
+            uri: feedUri,
             limit,
             cursor,
           }),

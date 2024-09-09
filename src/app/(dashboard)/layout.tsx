@@ -5,6 +5,7 @@ import { SearchBar } from "./search-bar.client";
 import * as routes from "@/lib/routes";
 import { Logo } from "@/components/icons";
 import { ActorAvatar } from "@/components/actor-avatar";
+import { Button } from "@/components/ui/button";
 
 export default async function Layout({
   children,
@@ -26,7 +27,7 @@ export default async function Layout({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur space-x-3">
+      <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur">
         <Drawer
           userId={user?.data?.handle}
           popularFeedGenerators={popularFeedGenerators}
@@ -34,7 +35,7 @@ export default async function Layout({
 
         <Link
           href={routes.home}
-          className="md:flex-1 flex flex-row items-center space-x-0.5"
+          className="md:flex-1 flex flex-row items-center space-x-0.5 mr-3"
         >
           <span className="font-black text-xl">BLUE</span>
           <Logo className="text-2xl" />
@@ -42,10 +43,14 @@ export default async function Layout({
 
         <SearchBar />
 
-        <div className="md:flex-1 flex items-end justify-end">
-          {user?.data && (
+        <div className="md:flex-1 flex items-end justify-end ml-3">
+          {user?.data ? (
             <Link href={routes.user(user.data.handle)}>
               <ActorAvatar actor={user.data} className="h-8 w-8" />
+            </Link>
+          ) : (
+            <Link href={routes.auth}>
+              <Button>Login</Button>
             </Link>
           )}
         </div>

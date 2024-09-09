@@ -25,7 +25,7 @@ export function ModeToggle() {
         >
           <Sun className="dark:hidden block mr-1" />
           <Moon className="dark:block hidden mr-1" />
-          <span>Change theme</span>
+          <span>Theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

@@ -271,12 +271,22 @@ export const getActorFeeds = async (params: {
   return feedGeneratorsSchema.parse(data);
 };
 
-export const getDiscoveryFeed = async ({ uri }: { uri: string }) => {
+export const getDiscoveryFeed = async ({
+  uri,
+  limit,
+  cursor,
+}: {
+  uri: string;
+  limit?: number;
+  cursor?: string;
+}) => {
   const session = await getSession();
   const res = await (session ? agent : publicAgent).com._client.call(
     "app.bsky.feed.getFeed",
     {
       feed: uri,
+      limit: limit ?? 30,
+      cursor,
     },
   );
   return outputSchema.parse(res.data);

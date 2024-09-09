@@ -10,7 +10,6 @@ import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { FeedCard } from "@/components/feed-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Byline, ProfileDescription } from "@/components/profile";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -64,27 +63,19 @@ export default async function Page({
         {restPosts && (
           <VirtualizedPosts
             defaultPosts={restPosts.map((p) => ({ post: p }))}
+            defaultCursor={discoveryFeed.cursor}
+            mode="feed"
+            feedUri={feedUri}
           />
         )}
       </>
-      <div className="w-80 -mr-20 p-4 border rounded-xl space-y-5 flex flex-col bg-accent/50">
+      <div className="w-full p-4 border rounded-xl space-y-5 flex flex-col bg-accent/50">
         <div>
           <FeedCard feed={feedGenerator} className="py-0" />
         </div>
 
-        <div className="space-y-2">
-          <div className="text-muted-foreground uppercase text-sm">
-            Feed creator
-          </div>
-          <Byline profile={feedGenerator.creator} />
-          <ProfileDescription
-            profile={feedGenerator.creator}
-            className="text-sm"
-          />
-        </div>
-
-        <div className="flex flex-col items-start space-y-2">
-          <div className="text-muted-foreground">
+        <div className="flex flex-col items-start">
+          <div className="text-muted-foreground text-sm mb-2">
             Other feeds by @{feedGenerator.creator.handle}
           </div>
           <div className="flex flex-row flex-wrap -mb-2">

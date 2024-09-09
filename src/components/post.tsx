@@ -132,16 +132,20 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
     );
   }
 
-  if (images.length == 2 || images.length >= 4) {
+  if (images.length == 2) {
     return (
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-px">
         {images.slice(0, 4).map((image, i) => (
           <div key={i} className="relative aspect-[1/1]">
             <Image
               src={image.fullsize}
               alt={image.alt}
               fill
-              className="rounded-lg object-cover"
+              className={cn(
+                "object-cover",
+                i === 0 && "rounded-l-md",
+                i === 1 && "rounded-r-md",
+              )}
             />
           </div>
         ))}
@@ -151,7 +155,7 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
 
   if (images.length === 3) {
     return (
-      <div className="grid grid-cols-3 grid-rows-2 gap-2">
+      <div className="grid grid-cols-3 grid-rows-2 gap-px">
         {images.map((image, i) => (
           <div
             key={i}
@@ -164,7 +168,35 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
               src={image.fullsize}
               alt={image.alt}
               fill
-              className="rounded-lg object-cover"
+              className={cn(
+                "object-cover",
+                i === 0 && "rounded-l-md",
+                i === 1 && "rounded-tr-md",
+                i === 2 && "rounded-br-md",
+              )}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (images.length >= 4) {
+    return (
+      <div className="grid grid-cols-2 gap-px">
+        {images.slice(0, 4).map((image, i) => (
+          <div key={i} className="relative aspect-[1/1]">
+            <Image
+              src={image.fullsize}
+              alt={image.alt}
+              fill
+              className={cn(
+                " object-cover",
+                i === 0 && "rounded-tl-md",
+                i === 1 && "rounded-tr-md",
+                i === 2 && "rounded-bl-md",
+                i === 3 && "rounded-br-md",
+              )}
             />
           </div>
         ))}
@@ -296,7 +328,7 @@ export function Post({
 
   return (
     <TrackScroll id={createdAt}>
-      <div className="py-4 px-4 md:px-2 space-y-2 relative hover:bg-accent/30">
+      <div className="py-4 px-4 lg:px-2 space-y-2 relative hover:bg-accent/30 border-b">
         {reasonRepost && (
           <span className="text-sm ml-8 -mb-1 flex items-center">
             <Repost className="text-lg mr-0.5" /> Reposted by{" "}

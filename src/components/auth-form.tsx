@@ -34,7 +34,7 @@ export async function login(formData: FormData) {
 
 export function AuthForm() {
   return (
-    <form action={login} className="space-y-2">
+    <form action={login} className="space-y-2 w-full max-w-md">
       <FormItem label="Username">
         {({ id }) => <Input name="username" id={id} />}
       </FormItem>
