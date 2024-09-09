@@ -6,7 +6,7 @@ import { AutoLinkText } from "./auto-link-text";
 
 export function UserSidebar({ profile }: { profile: ProfileViewDetailed }) {
   return (
-    <div className="rounded-xl w-80">
+    <div className="rounded-xl w-80 bg-accent/40">
       <div className="relative aspect-[2.5] w-full bg-accent rounded-t-xl">
         {profile.banner && (
           <Image

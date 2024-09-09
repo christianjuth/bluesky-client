@@ -546,10 +546,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/env@npm:15.0.0-canary.140"
-  checksum: 10c0/825a1aed4ec57ae72e4b45cf8772ccba85355336c7c666954690bbcd6b6aec957e6c77925bfbfb01739df96c044d74625ffa679df480168cd28fa2475ed8a100
+"@next/env@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/env@npm:15.0.0-canary.146"
+  checksum: 10c0/c83edd6bdaab363fef914852a417875ebea633a6958efbde68b0c03ec1621b396c7658406e688b80849f693bf6150d9ef47ea922b179d59fd6e357c3cdf1bdbb
   languageName: node
   linkType: hard
 
@@ -562,65 +562,65 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-darwin-arm64@npm:15.0.0-canary.140"
+"@next/swc-darwin-arm64@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-darwin-arm64@npm:15.0.0-canary.146"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-darwin-x64@npm:15.0.0-canary.140"
+"@next/swc-darwin-x64@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-darwin-x64@npm:15.0.0-canary.146"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-linux-arm64-gnu@npm:15.0.0-canary.140"
+"@next/swc-linux-arm64-gnu@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-linux-arm64-gnu@npm:15.0.0-canary.146"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-linux-arm64-musl@npm:15.0.0-canary.140"
+"@next/swc-linux-arm64-musl@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-linux-arm64-musl@npm:15.0.0-canary.146"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-linux-x64-gnu@npm:15.0.0-canary.140"
+"@next/swc-linux-x64-gnu@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-linux-x64-gnu@npm:15.0.0-canary.146"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-linux-x64-musl@npm:15.0.0-canary.140"
+"@next/swc-linux-x64-musl@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-linux-x64-musl@npm:15.0.0-canary.146"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-win32-arm64-msvc@npm:15.0.0-canary.140"
+"@next/swc-win32-arm64-msvc@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-win32-arm64-msvc@npm:15.0.0-canary.146"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-ia32-msvc@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-win32-ia32-msvc@npm:15.0.0-canary.140"
+"@next/swc-win32-ia32-msvc@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-win32-ia32-msvc@npm:15.0.0-canary.146"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "@next/swc-win32-x64-msvc@npm:15.0.0-canary.140"
+"@next/swc-win32-x64-msvc@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "@next/swc-win32-x64-msvc@npm:15.0.0-canary.146"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -781,6 +781,38 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/c843980f568cc61b512708863ec84c42a02e0f88359b22ad1c0e290cea3e6d7618eccbd2cd37bd974fadaa7636cbed5bda27553722e61197eb53852eaa34f1bb
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-dialog@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@radix-ui/react-dialog@npm:1.1.1"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.0"
+    "@radix-ui/react-compose-refs": "npm:1.1.0"
+    "@radix-ui/react-context": "npm:1.1.0"
+    "@radix-ui/react-dismissable-layer": "npm:1.1.0"
+    "@radix-ui/react-focus-guards": "npm:1.1.0"
+    "@radix-ui/react-focus-scope": "npm:1.1.0"
+    "@radix-ui/react-id": "npm:1.1.0"
+    "@radix-ui/react-portal": "npm:1.1.1"
+    "@radix-ui/react-presence": "npm:1.1.0"
+    "@radix-ui/react-primitive": "npm:2.0.0"
+    "@radix-ui/react-slot": "npm:1.1.0"
+    "@radix-ui/react-use-controllable-state": "npm:1.1.0"
+    aria-hidden: "npm:^1.1.1"
+    react-remove-scroll: "npm:2.5.7"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/a21e318e8d45bed22067880f66beb4ea91118a6c0d43aa20de495c0373b53c12dfe28f58196d5b33300573a5e24e064ec53648a576f02366fb5a297d887b0860
   languageName: node
   linkType: hard
 
@@ -973,6 +1005,39 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 10c0/2cb11867430276d8db595886ae0e01e67a555676d37e108d5a6c386df23329482115a041b6a4057fad6b855aa423681805c20d1f290fd1502e521e8e55aafb54
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-popover@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@radix-ui/react-popover@npm:1.1.1"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.0"
+    "@radix-ui/react-compose-refs": "npm:1.1.0"
+    "@radix-ui/react-context": "npm:1.1.0"
+    "@radix-ui/react-dismissable-layer": "npm:1.1.0"
+    "@radix-ui/react-focus-guards": "npm:1.1.0"
+    "@radix-ui/react-focus-scope": "npm:1.1.0"
+    "@radix-ui/react-id": "npm:1.1.0"
+    "@radix-ui/react-popper": "npm:1.2.0"
+    "@radix-ui/react-portal": "npm:1.1.1"
+    "@radix-ui/react-presence": "npm:1.1.0"
+    "@radix-ui/react-primitive": "npm:2.0.0"
+    "@radix-ui/react-slot": "npm:1.1.0"
+    "@radix-ui/react-use-controllable-state": "npm:1.1.0"
+    aria-hidden: "npm:^1.1.1"
+    react-remove-scroll: "npm:2.5.7"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/4539082143c6c006727cf4a6300479f3dd912e85291d5ed7f084d8a7730acc3b5f6589925ab70eca025d3c78026f52f99c0155e11a35de37fe26b8078e6802b3
   languageName: node
   linkType: hard
 
@@ -1268,12 +1333,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:0.5.12":
-  version: 0.5.12
-  resolution: "@swc/helpers@npm:0.5.12"
+"@swc/helpers@npm:0.5.13":
+  version: 0.5.13
+  resolution: "@swc/helpers@npm:0.5.13"
   dependencies:
     tslib: "npm:^2.4.0"
-  checksum: 10c0/44693c0f34d772d63f3a6fb461964ec583055549a96df9790afec125b2ba06929a63cf9a165a9aaf22317779f460f8caafa94458b70d5cb2bc057b6ba9b5d02c
+  checksum: 10c0/b9df578401fc62405da9a6c31e79e447a2fd90f68b25b1daee12f2caf2821991bb89106f0397bc1acb4c4d84a8ce079d04b60b65f534496952e3bf8c9a52f40f
   languageName: node
   linkType: hard
 
@@ -1745,9 +1810,11 @@ __metadata:
     "@atproto/oauth-client": "npm:^0.2.0"
     "@hookform/resolvers": "npm:^3.9.0"
     "@radix-ui/react-avatar": "npm:^1.1.0"
+    "@radix-ui/react-dialog": "npm:^1.1.1"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
     "@radix-ui/react-hover-card": "npm:^1.1.1"
     "@radix-ui/react-label": "npm:^2.1.0"
+    "@radix-ui/react-popover": "npm:^1.1.1"
     "@radix-ui/react-slot": "npm:^1.1.0"
     "@radix-ui/react-tooltip": "npm:^1.1.2"
     "@tailwindcss/typography": "npm:^0.5.15"
@@ -1766,7 +1833,7 @@ __metadata:
     lint-staged: "npm:^15.2.10"
     lucide-react: "npm:^0.436.0"
     markdown-to-jsx: "npm:^7.5.0"
-    next: "npm:15.0.0-canary.140"
+    next: "npm:15.0.0-canary.146"
     next-themes: "npm:^0.3.0"
     postcss: "npm:^8"
     prettier: "npm:3.3.3"
@@ -4174,22 +4241,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:15.0.0-canary.140":
-  version: 15.0.0-canary.140
-  resolution: "next@npm:15.0.0-canary.140"
+"next@npm:15.0.0-canary.146":
+  version: 15.0.0-canary.146
+  resolution: "next@npm:15.0.0-canary.146"
   dependencies:
-    "@next/env": "npm:15.0.0-canary.140"
-    "@next/swc-darwin-arm64": "npm:15.0.0-canary.140"
-    "@next/swc-darwin-x64": "npm:15.0.0-canary.140"
-    "@next/swc-linux-arm64-gnu": "npm:15.0.0-canary.140"
-    "@next/swc-linux-arm64-musl": "npm:15.0.0-canary.140"
-    "@next/swc-linux-x64-gnu": "npm:15.0.0-canary.140"
-    "@next/swc-linux-x64-musl": "npm:15.0.0-canary.140"
-    "@next/swc-win32-arm64-msvc": "npm:15.0.0-canary.140"
-    "@next/swc-win32-ia32-msvc": "npm:15.0.0-canary.140"
-    "@next/swc-win32-x64-msvc": "npm:15.0.0-canary.140"
+    "@next/env": "npm:15.0.0-canary.146"
+    "@next/swc-darwin-arm64": "npm:15.0.0-canary.146"
+    "@next/swc-darwin-x64": "npm:15.0.0-canary.146"
+    "@next/swc-linux-arm64-gnu": "npm:15.0.0-canary.146"
+    "@next/swc-linux-arm64-musl": "npm:15.0.0-canary.146"
+    "@next/swc-linux-x64-gnu": "npm:15.0.0-canary.146"
+    "@next/swc-linux-x64-musl": "npm:15.0.0-canary.146"
+    "@next/swc-win32-arm64-msvc": "npm:15.0.0-canary.146"
+    "@next/swc-win32-ia32-msvc": "npm:15.0.0-canary.146"
+    "@next/swc-win32-x64-msvc": "npm:15.0.0-canary.146"
     "@swc/counter": "npm:0.1.3"
-    "@swc/helpers": "npm:0.5.12"
+    "@swc/helpers": "npm:0.5.13"
     busboy: "npm:1.6.0"
     caniuse-lite: "npm:^1.0.30001579"
     graceful-fs: "npm:^4.2.11"
@@ -4235,7 +4302,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 10c0/c22f2d325cbad2cdbcbd4bbf4fb38f51dfb18dc29430541c31e1ca94d58b93f4cf1383a436651e59cd1ffb73bebcc03acd8d6be42d074140b4cd424bd03231b4
+  checksum: 10c0/f538cff553cebc51936199ad85d78ae58294029ac57064fb60d81a805a64a3a858cc8a154cc4725fcac289557d54ff0ca6f05ee7d7153dab3d020fe6420077a3
   languageName: node
   linkType: hard
 

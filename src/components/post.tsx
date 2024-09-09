@@ -114,14 +114,21 @@ function EmbededPost({ post }: { post: z.infer<typeof embedPostSchema> }) {
 
 function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
   if (images.length === 1) {
+    const [img] = images;
     return (
-      <Image
-        src={images[0].fullsize}
-        alt={images[0].alt}
-        height={images[0].aspectRatio.height}
-        width={images[0].aspectRatio.width}
-        className="rounded-lg"
-      />
+      <div
+        className="relative"
+        style={{
+          aspectRatio: img.aspectRatio.width / img.aspectRatio.height,
+        }}
+      >
+        <Image
+          src={images[0].fullsize}
+          alt={images[0].alt}
+          fill
+          className="rounded-lg"
+        />
+      </div>
     );
   }
 

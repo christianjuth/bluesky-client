@@ -19,7 +19,7 @@ export function UserWithHoverCard({
   account,
   children,
 }: {
-  account: z.infer<typeof accountSchema>;
+  account: Partial<z.infer<typeof accountSchema>>;
   children: React.ReactNode;
 }) {
   const [disabled, setDisabled] = useState(true);
@@ -32,9 +32,19 @@ export function UserWithHoverCard({
     },
   );
 
-  const initials = getInitials(account.displayName ?? account.handle);
+  const displayName =
+    data?.user.displayName ??
+    ("displayName" in account ? account.displayName : undefined);
+  const handle =
+    data?.user.handle ?? ("handle" in account ? account.handle : undefined);
+  const displayNameOrHandle = displayName ?? handle;
 
-  const avatar = account.avatar;
+  const initials = displayNameOrHandle
+    ? getInitials(displayNameOrHandle)
+    : undefined;
+
+  const avatar =
+    data?.user.avatar ?? ("avatar" in account ? account.avatar : undefined);
 
   account = data?.user ?? account;
 

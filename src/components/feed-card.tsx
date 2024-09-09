@@ -5,6 +5,7 @@ import { feedGeneratorSchema } from "@/lib/schemas";
 import z from "zod";
 import { AutoLinkText } from "@/components/auto-link-text";
 import Link from "next/link";
+import { HeartOutline } from "@/components/icons";
 
 export function FeedCard({
   feed,
@@ -14,7 +15,7 @@ export function FeedCard({
   className?: string;
 }) {
   return (
-    <div className={cn("py-2 flex flex-col space-y-1 text-sm", className)}>
+    <div className={cn("py-2 flex flex-col space-y-2 text-sm", className)}>
       <Link href={`/?feed=${feed.uri}`}>
         <div
           className={cn(
@@ -27,24 +28,25 @@ export function FeedCard({
               <Image
                 src={feed.avatar}
                 alt={feed.displayName}
-                className="rounded-lg"
+                className="rounded-full"
                 fill
               />
             </div>
           )}
           <div className="flex flex-col">
             <span className="font-bold">{feed.displayName}</span>
-            <span className="text-muted-foreground -mt-0.5">
+            <span className="text-muted-foreground text-xs">
               Feed by @{feed.creator.handle}
             </span>
           </div>
         </div>
       </Link>
-      <div>
+      <div className="text-muted-foreground text-xs line-clamp-2">
         <AutoLinkText>{feed.description}</AutoLinkText>
       </div>
-      <span className="text-muted-foreground">
-        Liked by {abbriviateNumber(feed.likeCount)} users
+      <div className="flex-1" />
+      <span className="text-muted-foreground flex flex-row items-center space-x-1">
+        <HeartOutline /> <span>{abbriviateNumber(feed.likeCount)}</span>
       </span>
     </div>
   );

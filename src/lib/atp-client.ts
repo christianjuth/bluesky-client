@@ -203,7 +203,9 @@ export const getPopularFeedGenerators = async (params: {
   const res = await fetch(
     `https://public.api.bsky.app/xrpc/app.bsky.unspecced.getPopularFeedGenerators?${queryParams.toString()}`,
     {
-      cache: "no-store",
+      next: {
+        revalidate: 60 * 60, // 1 hour
+      },
     },
   );
   const data = await res.json();
@@ -260,7 +262,7 @@ export const getActorFeeds = async (params: {
     queryParams.append("cursor", params.cursor);
   }
   const res = await fetch(
-    `https://public.api.bsky.app/xrpc/app.bsky.feed.getActorFeeds?${queryParams.toString()}`,
+    `https://public.api.bsky.app/xrpc/app.bsky.feed.getActorFeeds?${queryParams.toString()}&rkey=likeCount`,
     {
       cache: "no-store",
     },

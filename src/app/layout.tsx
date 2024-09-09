@@ -6,8 +6,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Bluedit",
-  description: "A reddit style client for Bluesky",
+  title: "BLUE #️⃣ ",
 };
 
 export default function RootLayout({

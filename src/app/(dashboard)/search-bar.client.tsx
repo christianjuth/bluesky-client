@@ -14,10 +14,10 @@ export function SearchBar() {
   }
 
   return (
-    <form method="GET" action={routes.search}>
+    <form method="GET" action={routes.search} className="flex-1 max-w-xl">
       <Input
         name="q"
-        className="w-60"
+        className="w-full"
         placeholder="Search..."
         defaultValue={defaultValue}
       />

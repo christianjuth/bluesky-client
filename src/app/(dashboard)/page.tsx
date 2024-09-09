@@ -38,9 +38,12 @@ export default async function Page({
 
   const actor = feedGenerator.creator.did;
 
-  const popularFeedGenerators = await getActorFeeds({
+  const feedGenerators = await getActorFeeds({
     actor,
   });
+  const sortedFeeds = feedGenerators.feeds
+    .filter((f) => f.uri !== feedUri)
+    .toSorted((a, b) => b.likeCount - a.likeCount);
 
   const discoveryFeed = await getDiscoveryFeed({
     uri: feedUri,
@@ -57,7 +60,6 @@ export default async function Page({
   return (
     <TemplateWithSidebar>
       <>
-        <FeedCard feed={feedGenerator} className="border-b" />
         {rscPosts?.map((post) => <Post key={post.uri} post={post} />)}
         {restPosts && (
           <VirtualizedPosts
@@ -65,7 +67,11 @@ export default async function Page({
           />
         )}
       </>
-      <div className="w-80 -mr-20 p-4 border rounded-xl space-y-5 flex flex-col">
+      <div className="w-80 -mr-20 p-4 border rounded-xl space-y-5 flex flex-col bg-accent/50">
+        <div>
+          <FeedCard feed={feedGenerator} className="py-0" />
+        </div>
+
         <div className="space-y-2">
           <div className="text-muted-foreground uppercase text-sm">
             Feed creator
@@ -81,11 +87,19 @@ export default async function Page({
           <div className="text-muted-foreground">
             Other feeds by @{feedGenerator.creator.handle}
           </div>
-          {popularFeedGenerators.feeds.map((feed) => (
-            <Button key={feed.uri} asChild size="sm" variant="outline">
-              <Link href={`?feed=${feed.uri}`}>{feed.displayName}</Link>
-            </Button>
-          ))}
+          <div className="flex flex-row flex-wrap -mb-2">
+            {sortedFeeds.map((feed) => (
+              <Button
+                key={feed.uri}
+                asChild
+                size="sm"
+                variant="outline"
+                className="mr-2 mb-2"
+              >
+                <Link href={`?feed=${feed.uri}`}>{feed.displayName}</Link>
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
     </TemplateWithSidebar>
