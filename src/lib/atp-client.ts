@@ -7,6 +7,7 @@ import {
   outputSchema,
   feedGeneratorsSchema,
   feedGeneratorSchema,
+  savedFeedsPrefSchema,
 } from "./schemas";
 
 /**
@@ -19,6 +20,7 @@ export const agent = new AtpAgent({
   service: "https://bsky.social",
   // service: 'https://public.api.bsky.app',
   fetch: (input, init) => {
+    // console.log("fetching", typeof input === 'string' ? input : input.url);
     return fetch(input, {
       ...init,
       cache: "no-store",
@@ -179,6 +181,17 @@ export const searchHashtags = async (params: {
   return data as { posts: PostView[]; cursor: string };
 };
 
+export const getSavedFeeds = async () => {
+  const { data } = await agent.com._client.call(
+    "app.bsky.actor.getPreferences",
+  );
+  const prefs = z.array(z.any()).parse(data.preferences);
+  const feedItemPref = prefs.find(
+    (pref) => savedFeedsPrefSchema.safeParse(pref).success,
+  );
+  return feedItemPref ? savedFeedsPrefSchema.parse(feedItemPref) : null;
+};
+
 export const getPopularFeedGenerators = async (params: {
   limit?: number;
   cursor?: string;
@@ -237,6 +250,18 @@ export const getFeedGenerator = async (params: {
     },
   );
   return feedGeneratorSchema.parse(res.data.view);
+};
+
+export const getFeedGenerators = async (params: {
+  /**
+   * The URI of the feed generator.
+   */
+  feeds: string[];
+}) => {
+  const res = await agent.com._client.call("app.bsky.feed.getFeedGenerators", {
+    feeds: params.feeds,
+  });
+  return feedGeneratorsSchema.parse(res.data);
 };
 
 export const getActorFeeds = async (params: {

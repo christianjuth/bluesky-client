@@ -122,6 +122,7 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
         }}
       >
         <Image
+          unoptimized
           src={images[0].fullsize}
           alt={images[0].alt}
           fill
@@ -137,6 +138,7 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
         {images.slice(0, 4).map((image, i) => (
           <div key={i} className="relative aspect-[1/1]">
             <Image
+              unoptimized
               src={image.fullsize}
               alt={image.alt}
               fill
@@ -164,6 +166,7 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
             )}
           >
             <Image
+              unoptimized
               src={image.fullsize}
               alt={image.alt}
               fill
@@ -186,6 +189,7 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
         {images.slice(0, 4).map((image, i) => (
           <div key={i} className="relative aspect-[1/1]">
             <Image
+              unoptimized
               src={image.fullsize}
               alt={image.alt}
               fill
@@ -279,6 +283,7 @@ function EmbedExternal({
     <a href={external.uri} target="_blank" rel="noopener noreferrer">
       <div className="aspect-video relative">
         <Image
+          unoptimized
           src={external.thumb}
           alt={external.title}
           fill

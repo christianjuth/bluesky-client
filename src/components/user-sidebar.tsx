@@ -20,6 +20,7 @@ export function UserSidebar({
       <div className="relative aspect-[2.2] w-full bg-accent rounded-t-[inherit]">
         {profile.banner && (
           <Image
+            unoptimized
             src={profile.banner}
             alt="Profile banner"
             layout="fill"

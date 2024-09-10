@@ -1,4 +1,10 @@
-import { agent, getPopularFeedGenerators, getSession } from "@/lib/atp-client";
+import {
+  agent,
+  getFeedGenerators,
+  getPopularFeedGenerators,
+  getSession,
+  getSavedFeeds,
+} from "@/lib/atp-client";
 import { BottomTabNavigator, Sidebar, Drawer } from "@/components/nav.client";
 import Link from "next/link";
 import { SearchBar } from "./search-bar.client";
@@ -10,12 +16,12 @@ import { feedRequiresAuth } from "@/lib/bsky/utils";
 
 function NotificationBell({ count }: { count: number }) {
   return (
-    <div className="relative">
+    <Link className="relative" href={routes.notifications}>
       <BellOutline className="text-2xl mr-3" />
       {count > 0 && (
         <div className="absolute -top-1 right-1/4 w-3 h-3 bg-red-500 rounded-full" />
       )}
-    </div>
+    </Link>
   );
 }
 
@@ -26,15 +32,23 @@ export default async function Layout({
 }) {
   const session = await getSession();
 
-  const user = session
-    ? await agent.getProfile({
-        actor: session.handle,
-      })
-    : null;
+  const [user, savedFeeds, popularFeedGenerators] = await Promise.all([
+    session ? agent.getProfile({ actor: session.handle }) : null,
+    session ? getSavedFeeds() : null,
+    getPopularFeedGenerators({ limit: 30 }),
+  ]);
 
-  const popularFeedGenerators = await getPopularFeedGenerators({
-    limit: 30,
-  });
+  const pinnedFeedUris = savedFeeds?.items
+    .filter((f) => f.type === "feed")
+    .map((f) => f.value);
+
+  const pinnedFeeds =
+    pinnedFeedUris && pinnedFeedUris.length > 0
+      ? await getFeedGenerators({
+          feeds: pinnedFeedUris,
+        })
+      : undefined;
+
   const feedGenerators = popularFeedGenerators.feeds
     .filter((f) => {
       if (!session) {
@@ -51,7 +65,11 @@ export default async function Layout({
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur">
-        <Drawer feedGenerators={feedGenerators} userId={user?.data?.handle} />
+        <Drawer
+          pinnedFeedGenerators={pinnedFeeds?.feeds}
+          feedGenerators={feedGenerators}
+          userId={user?.data?.handle}
+        />
 
         <Link
           href={routes.home}
@@ -84,7 +102,11 @@ export default async function Layout({
       <div className="h-14" />
 
       <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-6 max-md:hidden overflow-y-auto">
-        <Sidebar feedGenerators={feedGenerators} userId={user?.data?.handle} />
+        <Sidebar
+          pinnedFeedGenerators={pinnedFeeds?.feeds}
+          feedGenerators={feedGenerators}
+          userId={user?.data?.handle}
+        />
       </aside>
 
       <main className="w-full mx-auto md:pl-60">{children}</main>

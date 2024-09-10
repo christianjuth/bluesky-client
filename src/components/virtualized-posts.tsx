@@ -123,7 +123,7 @@ export function VirtualizedPosts({
 
       return () => {
         locked = true;
-        abortController.abort();
+        abortController.abort("component unmounted, or changed request");
       };
     }
   }, [loadingMore, cursor, actor, mode, feedUri]);

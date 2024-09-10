@@ -102,7 +102,7 @@ export function useFetch<T>(
 
     return () => {
       locked = true;
-      abortController.abort();
+      abortController.abort("component unmounted, or changed request");
     };
   }, [input, initSerialized, isDisabled, signal]);
 

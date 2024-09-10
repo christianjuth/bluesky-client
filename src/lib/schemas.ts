@@ -176,3 +176,17 @@ export const feedGeneratorsSchema = z.object({
   feeds: z.array(feedGeneratorSchema),
   cursor: z.string().optional(),
 });
+
+export const savedFeedsPrefSchema = z.object({
+  $type: z.literal("app.bsky.actor.defs#savedFeedsPrefV2"),
+  items: z.array(
+    z
+      .object({
+        type: z.string(),
+        value: z.string(),
+        pinned: z.boolean(),
+        id: z.string(),
+      })
+      .strip(),
+  ),
+});

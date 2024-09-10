@@ -1,10 +1,24 @@
-import { getPopularFeedGenerators } from "@/lib/atp-client";
+import {
+  getPopularFeedGenerators,
+  getSavedFeeds,
+  getSession,
+} from "@/lib/atp-client";
 import { FeedCard } from "@/components/feed-card";
 
 export default async function Page() {
-  const feeds = await getPopularFeedGenerators({
-    limit: 100,
-  });
+  const session = await getSession();
+
+  const [feeds, savedFeeds] = await Promise.all([
+    getPopularFeedGenerators({ limit: 100 }),
+    session ? getSavedFeeds() : null,
+  ]);
+
+  const savedFeedMap = new Map<string, string>();
+  if (savedFeeds) {
+    for (const feed of savedFeeds.items) {
+      savedFeedMap.set(feed.value, feed.id);
+    }
+  }
 
   return (
     <div className="max-w-5xl w-full mx-auto px-4 overflow-x-hidden">
@@ -15,6 +29,7 @@ export default async function Page() {
             key={feed.uri}
             feed={feed}
             className="border rounded-xl p-3"
+            savedId={savedFeedMap.get(feed.uri)}
           />
         ))}
       </div>

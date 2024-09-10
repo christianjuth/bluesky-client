@@ -55,9 +55,11 @@ const matchPaths = (target: string, current: string) => {
 export function Sidebar({
   userId,
   feedGenerators,
+  pinnedFeedGenerators,
 }: {
   userId?: string;
   feedGenerators: z.infer<typeof feedGeneratorSchema>[];
+  pinnedFeedGenerators?: z.infer<typeof feedGeneratorSchema>[];
 }) {
   const pathname = usePathname();
 
@@ -88,6 +90,41 @@ export function Sidebar({
         )}
       </div>
 
+      {pinnedFeedGenerators && (
+        <div className="flex flex-col space-y-1 py-4">
+          <div className="uppercase text-muted-foreground text-sm">
+            Pinned Feeds
+          </div>
+          {pinnedFeedGenerators.map((feed) => (
+            <Button
+              key={feed.uri}
+              asChild
+              size="sm"
+              variant="ghost"
+              className="mr-2 justify-start px-2.5 -mx-2.5"
+            >
+              <Link
+                className="flex flex-row space-x-1.5"
+                href={`/?feed=${feed.uri}`}
+              >
+                {feed.avatar && (
+                  <div className="relative w-6 h-6">
+                    <Image
+                      unoptimized
+                      src={feed.avatar}
+                      alt={feed.displayName}
+                      className="rounded-full"
+                      fill
+                    />
+                  </div>
+                )}
+                <span>{feed.displayName}</span>
+              </Link>
+            </Button>
+          ))}
+        </div>
+      )}
+
       <div className="flex flex-col space-y-1 py-4">
         <div className="uppercase text-muted-foreground text-sm">
           Popular Feeds
@@ -107,6 +144,7 @@ export function Sidebar({
               {feed.avatar && (
                 <div className="relative w-6 h-6">
                   <Image
+                    unoptimized
                     src={feed.avatar}
                     alt={feed.displayName}
                     className="rounded-full"
@@ -177,9 +215,11 @@ export function BottomTabNavigator() {
 export function Drawer({
   userId,
   feedGenerators,
+  pinnedFeedGenerators,
 }: {
   userId?: string;
   feedGenerators: z.infer<typeof feedGeneratorSchema>[];
+  pinnedFeedGenerators?: z.infer<typeof feedGeneratorSchema>[];
 }) {
   return (
     <Sheet>
@@ -188,7 +228,11 @@ export function Drawer({
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
         <div className="overflow-y-auto h-full p-6">
-          <Sidebar userId={userId} feedGenerators={feedGenerators} />
+          <Sidebar
+            userId={userId}
+            feedGenerators={feedGenerators}
+            pinnedFeedGenerators={pinnedFeedGenerators}
+          />
         </div>
       </SheetContent>
     </Sheet>

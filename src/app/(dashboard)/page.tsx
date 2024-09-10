@@ -134,6 +134,7 @@ function Sidebar({
               <Link href={`?feed=${feed.uri}`}>
                 {feed.avatar && (
                   <Image
+                    unoptimized
                     src={feed.avatar}
                     alt={feed.displayName}
                     className="rounded-full mr-1.5"

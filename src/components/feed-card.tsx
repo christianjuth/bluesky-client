@@ -1,21 +1,25 @@
+"use client";
+
 import { abbriviateNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { feedGeneratorSchema } from "@/lib/schemas";
 import z from "zod";
-import { AutoLinkText } from "@/components/auto-link-text";
 import Link from "next/link";
 import { HeartOutline } from "@/components/icons";
+import { SaveFeedButton } from "./save-feed.client";
 
 export function FeedCard({
   feed,
   className,
+  savedId,
 }: {
   feed: z.infer<typeof feedGeneratorSchema>;
   className?: string;
+  savedId?: string;
 }) {
   return (
-    <div className={cn("py-2 flex flex-col text-sm", className)}>
+    <div className={cn("py-2 flex flex-col text-sm relative", className)}>
       <Link href={`/?feed=${feed.uri}`} className="mb-2">
         <div
           className={cn(
@@ -26,6 +30,7 @@ export function FeedCard({
           {feed.avatar && (
             <div className="relative aspect-square">
               <Image
+                unoptimized
                 src={feed.avatar}
                 alt={feed.displayName}
                 className="rounded-full"
@@ -39,16 +44,19 @@ export function FeedCard({
               By @{feed.creator.handle}
             </span>
           </div>
-          <div>
-            <span className="text-muted-foreground flex flex-row items-center space-x-1 text-sm">
-              <HeartOutline />
-              <span>{abbriviateNumber(feed.likeCount)}</span>
-            </span>
-          </div>
         </div>
       </Link>
-      <div className="text-muted-foreground text-xs line-clamp-2">
-        <AutoLinkText>{feed.description}</AutoLinkText>
+      <SaveFeedButton
+        feedUri={feed.uri}
+        savedId={savedId}
+        className="absolute top-1 right-1"
+      />
+      <div className="text-muted-foreground text-xs line-clamp-2 mb-2">
+        {feed.description}
+      </div>
+      <div className="text-muted-foreground flex flex-row items-center space-x-1 text-sm">
+        <HeartOutline />
+        <span>{abbriviateNumber(feed.likeCount)}</span>
       </div>
       <div className="flex-1" />
     </div>

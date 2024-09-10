@@ -20,3 +20,5 @@ export const searchHashtags = (query: string) => `/search/${query}/hashtags`;
 export const feeds = "/explore";
 
 export const about = "/about";
+
+export const notifications = "/notifications";

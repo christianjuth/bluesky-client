@@ -27,3 +27,4 @@ export { PiHash as Feed, PiHashFill as FeedFill } from "react-icons/pi";
 export { LuLogOut as LogOut } from "react-icons/lu";
 export { MdOutlineMenu as Menu } from "react-icons/md";
 export { GoBell as BellOutline } from "react-icons/go";
+export { GoStar as Star, GoStarFill as StarFill } from "react-icons/go";
