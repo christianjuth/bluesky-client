@@ -6,6 +6,7 @@ import * as routes from "@/lib/routes";
 import { Logo, BellOutline } from "@/components/icons";
 import { ActorAvatar } from "@/components/actor-avatar";
 import { Button } from "@/components/ui/button";
+import { feedRequiresAuth } from "@/lib/bsky/utils";
 
 function NotificationBell({ count }: { count: number }) {
   return (
@@ -34,7 +35,14 @@ export default async function Layout({
   const popularFeedGenerators = await getPopularFeedGenerators({
     limit: 30,
   });
-  popularFeedGenerators.feeds.sort((a, b) => b.likeCount - a.likeCount);
+  const feedGenerators = popularFeedGenerators.feeds
+    .filter((f) => {
+      if (!session) {
+        return !feedRequiresAuth(f);
+      }
+      return true;
+    })
+    .sort((a, b) => b.likeCount - a.likeCount);
 
   const notifications = session
     ? await agent.countUnreadNotifications()
@@ -43,10 +51,7 @@ export default async function Layout({
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur">
-        <Drawer
-          popularFeedGenerators={popularFeedGenerators}
-          userId={user?.data?.handle}
-        />
+        <Drawer feedGenerators={feedGenerators} userId={user?.data?.handle} />
 
         <Link
           href={routes.home}
@@ -79,10 +84,7 @@ export default async function Layout({
       <div className="h-14" />
 
       <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-6 max-md:hidden overflow-y-auto">
-        <Sidebar
-          feedGenerators={popularFeedGenerators}
-          userId={user?.data?.handle}
-        />
+        <Sidebar feedGenerators={feedGenerators} userId={user?.data?.handle} />
       </aside>
 
       <main className="w-full mx-auto md:pl-60">{children}</main>

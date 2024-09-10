@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as routes from "@/lib/routes";
 import { logout } from "./nav.server";
-import { feedGeneratorsSchema } from "@/lib/schemas";
+import { feedGeneratorSchema } from "@/lib/schemas";
 import z from "zod";
 import Image from "next/image";
 import { ModeToggle } from "@/components/theme-mode-toggle";
@@ -57,11 +57,11 @@ export function Sidebar({
   feedGenerators,
 }: {
   userId?: string;
-  feedGenerators: z.infer<typeof feedGeneratorsSchema>;
+  feedGenerators: z.infer<typeof feedGeneratorSchema>[];
 }) {
   const pathname = usePathname();
 
-  const feeds = feedGenerators.feeds.filter((feed) => feed.avatar);
+  const feeds = feedGenerators.filter((feed) => feed.avatar);
 
   return (
     <div className="flex flex-col justify-between min-h-full divide-y">
@@ -176,10 +176,10 @@ export function BottomTabNavigator() {
 
 export function Drawer({
   userId,
-  popularFeedGenerators,
+  feedGenerators,
 }: {
   userId?: string;
-  popularFeedGenerators: z.infer<typeof feedGeneratorsSchema>;
+  feedGenerators: z.infer<typeof feedGeneratorSchema>[];
 }) {
   return (
     <Sheet>
@@ -188,7 +188,7 @@ export function Drawer({
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
         <div className="overflow-y-auto h-full p-6">
-          <Sidebar userId={userId} feedGenerators={popularFeedGenerators} />
+          <Sidebar userId={userId} feedGenerators={feedGenerators} />
         </div>
       </SheetContent>
     </Sheet>

@@ -17,6 +17,7 @@ import {
   feedGeneratorsSchema,
 } from "@/lib/schemas";
 import z from "zod";
+import { feedRequiresAuth } from "@/lib/bsky/utils";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -31,7 +32,7 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  await getSession();
+  const session = await getSession();
 
   const feedUri =
     "feed" in searchParams && typeof searchParams.feed === "string"
@@ -48,7 +49,15 @@ export default async function Page({
     actor,
   });
   const sortedFeeds = feedGenerators.feeds
-    .filter((f) => f.uri !== feedUri)
+    .filter((f) => {
+      if (f.uri === feedUri) {
+        return false;
+      }
+      if (!session) {
+        return !feedRequiresAuth(f);
+      }
+      return true;
+    })
     .toSorted((a, b) => b.likeCount - a.likeCount);
 
   let feed: Awaited<Awaited<ReturnType<typeof getFeed>>>;
