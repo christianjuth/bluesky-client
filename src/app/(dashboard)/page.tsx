@@ -3,6 +3,7 @@ import {
   getFeed,
   getFeedGenerator,
   getActorFeeds,
+  getSavedFeeds,
 } from "@/lib/atp-client";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
@@ -39,9 +40,14 @@ export default async function Page({
       ? searchParams.feed
       : DEFAULT_FEED_URI;
 
-  const feedGenerator = await getFeedGenerator({
-    feed: feedUri,
-  });
+  const [feedGenerator, savedFeeds] = await Promise.all([
+    getFeedGenerator({
+      feed: feedUri,
+    }),
+    session ? getSavedFeeds() : null,
+  ]);
+
+  const feedSavedId = savedFeeds?.items.find((f) => f.value === feedUri)?.id;
 
   const actor = feedGenerator.creator.did;
 
@@ -75,7 +81,11 @@ export default async function Page({
           Hmm, some kind of issue occurred when contacting the feed server.
           Please let the feed owner know about this issue.
         </div>
-        <Sidebar feedGenerator={feedGenerator} feeds={sortedFeeds} />
+        <Sidebar
+          feedGenerator={feedGenerator}
+          feeds={sortedFeeds}
+          feedSavedId={feedSavedId}
+        />
       </TemplateWithSidebar>
     );
   }
@@ -100,7 +110,11 @@ export default async function Page({
           />
         )}
       </>
-      <Sidebar feedGenerator={feedGenerator} feeds={sortedFeeds} />
+      <Sidebar
+        feedGenerator={feedGenerator}
+        feeds={sortedFeeds}
+        feedSavedId={feedSavedId}
+      />
     </TemplateWithSidebar>
   );
 }
@@ -108,14 +122,16 @@ export default async function Page({
 function Sidebar({
   feedGenerator,
   feeds,
+  feedSavedId,
 }: {
   feedGenerator: z.infer<typeof feedGeneratorSchema>;
   feeds: z.infer<typeof feedGeneratorsSchema>["feeds"];
+  feedSavedId?: string;
 }) {
   return (
     <div className="w-full p-4 border rounded-xl space-y-5 flex flex-col bg-accent/50">
       <div>
-        <FeedCard feed={feedGenerator} className="py-0" />
+        <FeedCard feed={feedGenerator} className="py-0" savedId={feedSavedId} />
       </div>
 
       <div className="flex flex-col items-start">
