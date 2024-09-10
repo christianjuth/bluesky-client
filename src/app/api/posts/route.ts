@@ -3,7 +3,7 @@ import {
   agent,
   publicAgent,
   getMyLikedPosts,
-  getDiscoveryFeed,
+  getFeed,
 } from "@/lib/atp-client";
 import { outputSchema } from "@/lib/schemas";
 import { type NextRequest, NextResponse } from "next/server";
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
       mode,
       userId,
       feedUri,
-      limit = 30,
+      limit = 20,
     } = searchParamsSchema.parse({
       cursor: searchParams.get("cursor") ?? undefined,
       mode: searchParams.get("mode") ?? undefined,
@@ -147,7 +147,7 @@ export async function GET(request: NextRequest) {
         );
       case "feed":
         return NextResponse.json(
-          await getDiscoveryFeed({
+          await getFeed({
             uri: feedUri,
             limit,
             cursor,

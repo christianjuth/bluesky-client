@@ -1,8 +1,6 @@
 import { AtpAgent } from "@atproto/api";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import z from "zod";
-import * as routes from "@/lib/routes";
 import { PostView } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { cache } from "react";
 import {
@@ -262,7 +260,7 @@ export const getActorFeeds = async (params: {
   return feedGeneratorsSchema.parse(data);
 };
 
-export const getDiscoveryFeed = async ({
+export const getFeed = async ({
   uri,
   limit,
   cursor,

@@ -82,7 +82,7 @@ export function VirtualizedPosts({
 
   const virtualizedItems = virtualizer.getVirtualItems();
 
-  const [loadingMore, setLoadingMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(true);
   const atLastItem =
     virtualizedItems[virtualizedItems.length - 1]?.index === feed.length - 1;
 

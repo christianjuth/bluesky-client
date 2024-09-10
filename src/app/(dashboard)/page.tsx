@@ -1,6 +1,6 @@
 import {
   getSession,
-  getDiscoveryFeed,
+  getFeed,
   getFeedGenerator,
   getActorFeeds,
 } from "@/lib/atp-client";
@@ -11,6 +11,12 @@ import { FeedCard } from "@/components/feed-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import {
+  postsSchema,
+  feedGeneratorSchema,
+  feedGeneratorsSchema,
+} from "@/lib/schemas";
+import z from "zod";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -45,10 +51,25 @@ export default async function Page({
     .filter((f) => f.uri !== feedUri)
     .toSorted((a, b) => b.likeCount - a.likeCount);
 
-  const discoveryFeed = await getDiscoveryFeed({
-    uri: feedUri,
-  });
-  const posts = discoveryFeed?.feed.map(({ post }) => post);
+  let feed: Awaited<Awaited<ReturnType<typeof getFeed>>>;
+  let posts: z.infer<typeof postsSchema>;
+  try {
+    feed = await getFeed({
+      uri: feedUri,
+      limit: 10,
+    });
+    posts = feed?.feed.map(({ post }) => post);
+  } catch (e) {
+    return (
+      <TemplateWithSidebar>
+        <div className="p-8 text-center">
+          Hmm, some kind of issue occurred when contacting the feed server.
+          Please let the feed owner know about this issue.
+        </div>
+        <Sidebar feedGenerator={feedGenerator} feeds={sortedFeeds} />
+      </TemplateWithSidebar>
+    );
+  }
 
   // The data we get seems to contain some helper functions.
   // Calling postsSchema.parse removes anything we don't need,
@@ -64,47 +85,59 @@ export default async function Page({
         {restPosts && (
           <VirtualizedPosts
             defaultPosts={restPosts.map((p) => ({ post: p }))}
-            defaultCursor={discoveryFeed.cursor}
+            defaultCursor={feed.cursor}
             mode="feed"
             feedUri={feedUri}
           />
         )}
       </>
-      <div className="w-full p-4 border rounded-xl space-y-5 flex flex-col bg-accent/50">
-        <div>
-          <FeedCard feed={feedGenerator} className="py-0" />
-        </div>
+      <Sidebar feedGenerator={feedGenerator} feeds={sortedFeeds} />
+    </TemplateWithSidebar>
+  );
+}
 
-        <div className="flex flex-col items-start">
-          <div className="text-muted-foreground text-sm mb-2">
-            Other feeds by @{feedGenerator.creator.handle}
-          </div>
-          <div className="flex flex-row flex-wrap -mb-2">
-            {sortedFeeds.map((feed) => (
-              <Button
-                key={feed.uri}
-                asChild
-                size="sm"
-                variant="outline"
-                className="mr-2 mb-2 pl-2"
-              >
-                <Link href={`?feed=${feed.uri}`}>
-                  {feed.avatar && (
-                    <Image
-                      src={feed.avatar}
-                      alt={feed.displayName}
-                      className="rounded-full mr-1.5"
-                      width={24}
-                      height={24}
-                    />
-                  )}
-                  {feed.displayName}
-                </Link>
-              </Button>
-            ))}
-          </div>
+function Sidebar({
+  feedGenerator,
+  feeds,
+}: {
+  feedGenerator: z.infer<typeof feedGeneratorSchema>;
+  feeds: z.infer<typeof feedGeneratorsSchema>["feeds"];
+}) {
+  return (
+    <div className="w-full p-4 border rounded-xl space-y-5 flex flex-col bg-accent/50">
+      <div>
+        <FeedCard feed={feedGenerator} className="py-0" />
+      </div>
+
+      <div className="flex flex-col items-start">
+        <div className="text-muted-foreground text-sm mb-2">
+          Other feeds by @{feedGenerator.creator.handle}
+        </div>
+        <div className="flex flex-row flex-wrap -mb-2">
+          {feeds.map((feed) => (
+            <Button
+              key={feed.uri}
+              asChild
+              size="sm"
+              variant="outline"
+              className="mr-2 mb-2 pl-2"
+            >
+              <Link href={`?feed=${feed.uri}`}>
+                {feed.avatar && (
+                  <Image
+                    src={feed.avatar}
+                    alt={feed.displayName}
+                    className="rounded-full mr-1.5"
+                    width={24}
+                    height={24}
+                  />
+                )}
+                {feed.displayName}
+              </Link>
+            </Button>
+          ))}
         </div>
       </div>
-    </TemplateWithSidebar>
+    </div>
   );
 }
