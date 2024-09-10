@@ -10,6 +10,7 @@ import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { FeedCard } from "@/components/feed-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -85,9 +86,20 @@ export default async function Page({
                 asChild
                 size="sm"
                 variant="outline"
-                className="mr-2 mb-2"
+                className="mr-2 mb-2 pl-2"
               >
-                <Link href={`?feed=${feed.uri}`}>{feed.displayName}</Link>
+                <Link href={`?feed=${feed.uri}`}>
+                  {feed.avatar && (
+                    <Image
+                      src={feed.avatar}
+                      alt={feed.displayName}
+                      className="rounded-full mr-1.5"
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                  {feed.displayName}
+                </Link>
               </Button>
             ))}
           </div>

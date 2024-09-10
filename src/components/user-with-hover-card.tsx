@@ -14,6 +14,7 @@ import { abbriviateNumber, getInitials } from "@/lib/format";
 import dayjs from "dayjs";
 import { AutoLinkText } from "./auto-link-text";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { FollowButton } from "./follow-button.client";
 
 export function UserWithHoverCard({
   account,
@@ -24,7 +25,7 @@ export function UserWithHoverCard({
 }) {
   const [disabled, setDisabled] = useState(true);
 
-  const { data } = useFetch<UserGetResponse>(
+  const { data, reset } = useFetch<UserGetResponse>(
     `/api/user?userId=${account.handle}`,
     {},
     {
@@ -49,11 +50,28 @@ export function UserWithHoverCard({
   account = data?.user ?? account;
 
   return (
-    <HoverCard openDelay={500} closeDelay={50}>
+    <HoverCard
+      openDelay={500}
+      closeDelay={50}
+      onOpenChange={(state) => {
+        if (!state) {
+          setDisabled(true);
+          reset();
+        }
+      }}
+    >
       <HoverCardTrigger onMouseEnter={() => setDisabled(false)} asChild>
         {children}
       </HoverCardTrigger>
-      <HoverCardContent>
+      <HoverCardContent className="relative">
+        {account.did && (
+          <FollowButton
+            actorDid={account.did}
+            following={account.viewer?.following}
+            className="absolute top-4 right-4"
+          />
+        )}
+
         <div className="space-y-3">
           <Avatar className="h-12 w-12">
             <AvatarImage src={avatar} />
@@ -65,38 +83,20 @@ export function UserWithHoverCard({
             <span>@{account.handle}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col">
+          <div className="text-sm space-x-3">
+            {account.followersCount !== undefined && (
               <span>
-                {account.followsCount !== undefined
-                  ? abbriviateNumber(account.followsCount)
-                  : "Unknown"}
+                {abbriviateNumber(account.followersCount)}
+                <span className="text-muted-foreground"> followers</span>
               </span>
-              <span className="text-muted-foreground">Following</span>
-            </div>
+            )}
 
-            <div className="flex flex-col">
+            {account.postsCount !== undefined && (
               <span>
-                {account.followersCount !== undefined
-                  ? abbriviateNumber(account.followersCount)
-                  : "Unknown"}
+                {abbriviateNumber(account.postsCount)}
+                <span className="text-muted-foreground"> posts</span>
               </span>
-              <span className="text-muted-foreground">Followers</span>
-            </div>
-
-            <div className="flex flex-col">
-              <span>{dayjs(account.createdAt).format("MMM D, YYYY")}</span>
-              <span className="text-muted-foreground">Joined</span>
-            </div>
-
-            <div className="flex flex-col">
-              <span>
-                {account.postsCount !== undefined
-                  ? abbriviateNumber(account.postsCount)
-                  : "Unknown"}
-              </span>
-              <span className="text-muted-foreground">Posts</span>
-            </div>
+            )}
           </div>
 
           {account.description && (

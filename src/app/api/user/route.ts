@@ -1,4 +1,4 @@
-import { publicAgent } from "@/lib/atp-client";
+import { agent, getSession, publicAgent } from "@/lib/atp-client";
 import { accountSchema } from "@/lib/schemas";
 import { type NextRequest, NextResponse } from "next/server";
 import { InferNextResponseJSON } from "@/lib/type-utils";
@@ -9,6 +9,8 @@ const searchParamsSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const session = await getSession();
+
   const searchParams = request.nextUrl.searchParams;
 
   try {
@@ -16,7 +18,7 @@ export async function GET(request: NextRequest) {
       userId: decodeURIComponent(searchParams.get("userId") ?? ""),
     });
 
-    const user = await publicAgent.getProfile({
+    const user = await (session ? agent : publicAgent).getProfile({
       actor: userId,
     });
 

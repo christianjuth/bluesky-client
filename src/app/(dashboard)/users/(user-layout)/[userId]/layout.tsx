@@ -1,4 +1,4 @@
-import { getSession, publicAgent } from "@/lib/atp-client";
+import { agent, getSession, publicAgent } from "@/lib/atp-client";
 import { UserSidebar } from "@/components/user-sidebar";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { PillNavbar } from "@/components/pill-navbar";
@@ -11,11 +11,11 @@ export default async function Layout({
   children: React.ReactNode;
   params: { userId: string };
 }) {
-  const profile = await publicAgent.getProfile({
+  const session = await getSession();
+
+  const profile = await (session ? agent : publicAgent).getProfile({
     actor: params.userId,
   });
-
-  const session = await getSession();
 
   const isMyself = session?.handle === params.userId;
 
@@ -37,6 +37,7 @@ export default async function Layout({
         {children}
       </>
       <UserSidebar
+        isMyself={isMyself}
         profile={profile.data}
         className="max-md:-mx-4 max-md:rounded-none max-md:-mt-4 max-md:border-t-0"
       />

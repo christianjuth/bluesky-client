@@ -3,19 +3,21 @@ import Image from "next/image";
 import { abbriviateNumber } from "@/lib/format";
 import { AutoLinkText } from "./auto-link-text";
 import { ActorAvatar } from "./actor-avatar";
-import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { FollowingButtonWithAutoRefresh } from "./follow-button.client";
 
 export function UserSidebar({
   profile,
   className,
+  isMyself,
 }: {
   profile: ProfileViewDetailed;
   className?: string;
+  isMyself?: boolean;
 }) {
   return (
     <div className={cn("bg-accent/40 border rounded-xl", className)}>
-      <div className="relative aspect-[2.5] w-full bg-accent rounded-t-[inherit]">
+      <div className="relative aspect-[2.2] w-full bg-accent rounded-t-[inherit]">
         {profile.banner && (
           <Image
             src={profile.banner}
@@ -25,7 +27,7 @@ export function UserSidebar({
             className="rounded-t-[inherit] object-cover"
           />
         )}
-        <div className="absolute top-full transform left-4 -translate-y-1/2  h-20 w-20">
+        <div className="absolute top-full transform left-4 -translate-y-1/2 h-24 w-24">
           <div className="absolute -inset-x-0.5 -top-0.5 bottom-1/2 bg-accent rounded-t-full" />
           <ActorAvatar
             actor={profile}
@@ -34,15 +36,20 @@ export function UserSidebar({
         </div>
       </div>
 
-      <div className="px-4 pt-2.5 -mb-0.5 flex flex-row justify-end">
-        <Button size="sm" variant="secondary">
-          Follow
-        </Button>
+      <div className="px-4 flex flex-row justify-end h-14 items-center">
+        {!isMyself && (
+          <FollowingButtonWithAutoRefresh
+            actorDid={profile.did}
+            following={profile.viewer?.following}
+          />
+        )}
       </div>
 
       <div className="p-4 pt-0 space-y-3">
         <div>
-          <div className="font-bold text-lg">{profile.displayName}</div>
+          <div className="font-bold">
+            {profile.displayName || profile.handle}
+          </div>
           <div className="text-muted-foreground text-sm">@{profile.handle}</div>
         </div>
 

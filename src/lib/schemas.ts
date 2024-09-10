@@ -13,6 +13,11 @@ export const accountSchema = z
     followsCount: z.number().optional(),
     postsCount: z.number().optional(),
     description: z.string().optional(),
+    viewer: z
+      .object({
+        following: z.string().optional(),
+      })
+      .optional(),
   })
   .strip();
 
@@ -114,7 +119,16 @@ export const postSchema = z
       })
       .strip()
       .optional(),
-    // labels: z.array(z.unknown()),
+    labels: z.array(
+      z.object({
+        src: z.string(),
+        uri: z.string(),
+        cid: z.string().optional(),
+        val: z.string(),
+        cts: z.string(),
+        neg: z.boolean().optional(),
+      }),
+    ),
   })
   .strip();
 

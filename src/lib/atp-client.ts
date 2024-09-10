@@ -81,16 +81,6 @@ export const getSession = cache(async () => {
   }
 });
 
-export const requireSession = async () => {
-  const session = await getSession();
-
-  if (!session) {
-    redirect(routes.auth);
-  }
-
-  return session;
-};
-
 const likesSchema = z.array(
   z.object({
     value: z.object({
@@ -203,9 +193,10 @@ export const getPopularFeedGenerators = async (params: {
   const res = await fetch(
     `https://public.api.bsky.app/xrpc/app.bsky.unspecced.getPopularFeedGenerators?${queryParams.toString()}`,
     {
-      next: {
-        revalidate: 60 * 60, // 1 hour
-      },
+      // next: {
+      //   revalidate: 60 * 60, // 1 hour
+      // },
+      cache: "no-store",
     },
   );
   const data = await res.json();

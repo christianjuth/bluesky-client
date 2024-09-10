@@ -1,7 +1,4 @@
-import {
-  PostView,
-  ReplyRef,
-} from "@atproto/api/dist/client/types/app/bsky/feed/defs";
+import { ReplyRef } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import * as routes from "@/lib/routes";
 import { RelativeTime } from "./relative-time.client";
@@ -18,6 +15,8 @@ import { getInitials } from "@/lib/format";
 import { TrackScroll } from "./track-scroll";
 import { UserWithHoverCard } from "./user-with-hover-card";
 import z from "zod";
+import { isLabledSexual } from "@/lib/bsky/utils";
+import { DismissableBlur } from "@/components/dismissable-blur";
 
 const imagesSchema = z.array(
   z
@@ -373,7 +372,12 @@ export function Post({
             <EmbedExternal external={post.embed.external} />
           )}
 
-          {images && <Images images={images} />}
+          <div className="relative">
+            {images && <Images images={images} />}
+            {isLabledSexual(post) && (
+              <DismissableBlur className="absolute inset-0 rounded-md" />
+            )}
+          </div>
 
           <div className="flex flex-row items-center space-x-6 text-sm">
             <LikeButton

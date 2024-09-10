@@ -60,8 +60,10 @@ export function useFetch<T>(
   init?: Pick<RequestInit, "method"> | undefined,
   options?: { disabled?: boolean },
 ) {
+  const [signal, setSignal] = useState(0);
   const [data, setData] = useState<OmitErrorResponse<T> | null>(null);
   const [pending, setPending] = useState(false);
+  const [fetchedAt, setFetchedAt] = useState(-1);
 
   const initSerialized = init ? JSON.stringify(init) : undefined;
 
@@ -88,6 +90,7 @@ export function useFetch<T>(
           // TODO: handle error
         } else {
           setData(data as OmitErrorResponse<T>);
+          setFetchedAt(Date.now());
         }
         setPending(false);
       })
@@ -101,10 +104,23 @@ export function useFetch<T>(
       locked = true;
       abortController.abort();
     };
-  }, [input, initSerialized, isDisabled]);
+  }, [input, initSerialized, isDisabled, signal]);
+
+  const reset = useCallback(() => {
+    setData(null);
+    setPending(false);
+    setFetchedAt(-1);
+  }, []);
+
+  const refresh = useCallback(() => {
+    setSignal((prev) => prev + 1);
+  }, []);
 
   return {
     data,
     pending,
+    reset,
+    fetchedAt,
+    refresh,
   };
 }

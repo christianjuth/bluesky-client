@@ -138,7 +138,12 @@ export function Sidebar({
       </div>
 
       <div className="pt-4 flex flex-col">
-        <Button asChild variant="ghost" size="sm" className="justify-start">
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="justify-start px-2.5 -mx-2.5"
+        >
           <Link href={routes.about}>About</Link>
         </Button>
       </div>

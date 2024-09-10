@@ -3,9 +3,20 @@ import { BottomTabNavigator, Sidebar, Drawer } from "@/components/nav.client";
 import Link from "next/link";
 import { SearchBar } from "./search-bar.client";
 import * as routes from "@/lib/routes";
-import { Logo } from "@/components/icons";
+import { Logo, BellOutline } from "@/components/icons";
 import { ActorAvatar } from "@/components/actor-avatar";
 import { Button } from "@/components/ui/button";
+
+function NotificationBell({ count }: { count: number }) {
+  return (
+    <div className="relative">
+      <BellOutline className="text-2xl mr-3" />
+      {count > 0 && (
+        <div className="absolute -top-1 right-1/4 w-3 h-3 bg-red-500 rounded-full" />
+      )}
+    </div>
+  );
+}
 
 export default async function Layout({
   children,
@@ -25,6 +36,8 @@ export default async function Layout({
   });
   popularFeedGenerators.feeds.sort((a, b) => b.likeCount - a.likeCount);
 
+  const notifications = await agent.countUnreadNotifications();
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur">
@@ -40,15 +53,18 @@ export default async function Layout({
 
         <SearchBar />
 
-        <div className="md:flex-1 flex items-end justify-end ml-3">
+        <div className="md:flex-1 flex items-center justify-end ml-3">
           {user?.data ? (
-            <Link href={routes.user(user.data.handle)}>
-              <ActorAvatar actor={user.data} className="h-8 w-8" />
-            </Link>
+            <>
+              <NotificationBell count={notifications.data.count} />
+              <Link href={routes.user(user.data.handle)}>
+                <ActorAvatar actor={user.data} className="h-8 w-8" />
+              </Link>
+            </>
           ) : (
-            <Link href={routes.auth}>
-              <Button>Login</Button>
-            </Link>
+            <Button asChild size="sm">
+              <Link href={routes.auth}>Login</Link>
+            </Button>
           )}
         </div>
       </div>
