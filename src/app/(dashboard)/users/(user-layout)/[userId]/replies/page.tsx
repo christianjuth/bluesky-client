@@ -53,7 +53,7 @@ export default async function Posts({
         actor={userId}
         mode="replies"
       />
-      {cursor && <ResetScroll offsetY={150} />}
+      {cursor && <ResetScroll offsetY={70} />}
     </>
   );
 }

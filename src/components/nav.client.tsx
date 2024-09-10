@@ -23,7 +23,7 @@ import {
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-const getSidebarLinks = (userId?: string) => [
+const SIDEBAR_LINKS_SECTION_1 = [
   {
     href: routes.home,
     text: "Home",
@@ -64,9 +64,9 @@ export function Sidebar({
   const feeds = feedGenerators.feeds.filter((feed) => feed.avatar);
 
   return (
-    <div className="flex flex-col justify-between gap-8 min-h-full">
-      <div className="flex flex-col space-y-1">
-        {getSidebarLinks(userId).map(
+    <div className="flex flex-col justify-between min-h-full divide-y">
+      <div className="flex flex-col space-y-1 pb-4">
+        {SIDEBAR_LINKS_SECTION_1.map(
           ({ href, text, icon: Icon, iconActive: IconActive }) => (
             <Button
               key={href}
@@ -88,7 +88,7 @@ export function Sidebar({
         )}
       </div>
 
-      <div className="flex flex-col space-y-1">
+      <div className="flex flex-col space-y-1 py-4">
         <div className="uppercase text-muted-foreground text-sm">
           Popular Feeds
         </div>
@@ -120,7 +120,7 @@ export function Sidebar({
         ))}
       </div>
 
-      <div className="flex flex-col space-y-1">
+      <div className="flex flex-col space-y-1 py-4">
         <div className="uppercase text-muted-foreground text-sm">Settings</div>
         <ModeToggle />
         {userId && (
@@ -136,26 +136,35 @@ export function Sidebar({
           </form>
         )}
       </div>
+
+      <div className="pt-4 flex flex-col">
+        <Button asChild variant="ghost" size="sm" className="justify-start">
+          <Link href={routes.about}>About</Link>
+        </Button>
+      </div>
     </div>
   );
 }
 
-export function BottomTabNavigator({ userId }: { userId?: string }) {
+export function BottomTabNavigator() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-14 border-t flex flex-row items-center justify-between px-4 bg-background/80 z-20 backdrop-blur md:hidden">
-      {getSidebarLinks(userId).map(({ href, icon: Icon }) => (
-        <Button
-          key={href}
-          asChild
-          variant={matchPaths(href, pathname) ? "default" : "ghost"}
-        >
-          <Link href={href}>
-            <Icon className="text-lg" />
-          </Link>
-        </Button>
-      ))}
+    <div className="fixed bottom-0 left-0 right-0 border-t bg-background/80 z-20 backdrop-blur md:hidden pb-safe-or-2">
+      <div className="flex flex-row justify-between pt-2 px-8">
+        {SIDEBAR_LINKS_SECTION_1.map(
+          ({ href, text, icon: Icon, iconActive: IconActive }) => (
+            <Link href={href} className="flex flex-col items-center" key={href}>
+              {matchPaths(href, pathname) ? (
+                <IconActive className="mr-1.5 text-2xl" />
+              ) : (
+                <Icon className="mr-1.5 text-xl" />
+              )}
+              <span className="text-sm">{text}</span>
+            </Link>
+          ),
+        )}
+      </div>
     </div>
   );
 }

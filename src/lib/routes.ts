@@ -18,3 +18,5 @@ export const searchUsers = (query: string) => `/search/${query}/users`;
 export const searchHashtags = (query: string) => `/search/${query}/hashtags`;
 
 export const feeds = "/explore";
+
+export const about = "/about";

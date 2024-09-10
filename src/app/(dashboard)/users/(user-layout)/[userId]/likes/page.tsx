@@ -48,7 +48,7 @@ export default async function Posts({
         actor={session.handle}
         mode="likes"
       />
-      {cursor && <ResetScroll offsetY={150} />}
+      {cursor && <ResetScroll offsetY={70} />}
     </>
   );
 }

@@ -1845,6 +1845,7 @@ __metadata:
     tailwind-merge: "npm:^2.5.2"
     tailwindcss: "npm:^3.4.1"
     tailwindcss-animate: "npm:^1.0.7"
+    tailwindcss-safe-area: "npm:^0.6.0"
     tlds: "npm:^1.254.0"
     typescript: "npm:^5"
     use-debounce: "npm:^10.0.3"
@@ -5556,6 +5557,15 @@ __metadata:
   peerDependencies:
     tailwindcss: "*"
   checksum: 10c0/ec7dbd1631076b97d66a1fbaaa06e0725fccfa63119221e8d87a997b02dcede98ad88bb1ef6665b968f5d260fcefb10592e0299ca70208d365b37761edf5e19a
+  languageName: node
+  linkType: hard
+
+"tailwindcss-safe-area@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "tailwindcss-safe-area@npm:0.6.0"
+  peerDependencies:
+    tailwindcss: ^2.0.0 || >=3.0.0
+  checksum: 10c0/b0cc43a08d0f220c8eff111b0c149d7ca959851de8a83743fcb2a7220a1ee9efa5a0bc966a6ef0604eb0529915b254be18da6453c9ed911c0b805c6f012dbd09
   languageName: node
   linkType: hard
 

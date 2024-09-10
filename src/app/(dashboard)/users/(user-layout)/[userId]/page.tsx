@@ -63,7 +63,7 @@ export default async function Posts({
         actor={userId}
         mode="overview"
       />
-      {cursor && <ResetScroll offsetY={150} />}
+      {cursor && <ResetScroll offsetY={70} />}
     </>
   );
 }

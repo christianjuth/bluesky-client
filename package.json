@@ -39,6 +39,7 @@
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-safe-area": "^0.6.0",
     "tlds": "^1.254.0",
     "use-debounce": "^10.0.3",
     "utility-types": "^3.11.0",

@@ -36,7 +36,7 @@ export function FeedCard({
           <div className="flex flex-col">
             <span className="font-bold">{feed.displayName}</span>
             <span className="text-muted-foreground text-xs">
-              Feed by @{feed.creator.handle}
+              By @{feed.creator.handle}
             </span>
           </div>
           <div>

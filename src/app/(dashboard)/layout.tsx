@@ -28,10 +28,7 @@ export default async function Layout({
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur">
-        <Drawer
-          userId={user?.data?.handle}
-          popularFeedGenerators={popularFeedGenerators}
-        />
+        <Drawer popularFeedGenerators={popularFeedGenerators} />
 
         <Link
           href={routes.home}
@@ -59,10 +56,7 @@ export default async function Layout({
       <div className="h-14" />
 
       <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-6 max-md:hidden overflow-y-auto">
-        <Sidebar
-          userId={user?.data?.handle}
-          feedGenerators={popularFeedGenerators}
-        />
+        <Sidebar feedGenerators={popularFeedGenerators} />
       </aside>
 
       <main className="w-full mx-auto md:pl-60">{children}</main>
