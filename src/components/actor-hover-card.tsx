@@ -11,22 +11,21 @@ import z from "zod";
 import { useFetch } from "@/lib/hooks";
 import { GetResponse as UserGetResponse } from "@/app/api/user/route";
 import { abbriviateNumber, getInitials } from "@/lib/format";
-import dayjs from "dayjs";
 import { AutoLinkText } from "./auto-link-text";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FollowButton } from "./follow-button.client";
 
-export function UserWithHoverCard({
-  account,
+export function ActorHoverCard({
+  actor,
   children,
 }: {
-  account: Partial<z.infer<typeof accountSchema>>;
+  actor: Partial<z.infer<typeof accountSchema>>;
   children: React.ReactNode;
 }) {
   const [disabled, setDisabled] = useState(true);
 
   const { data, reset } = useFetch<UserGetResponse>(
-    `/api/user?userId=${account.handle}`,
+    `/api/user?userId=${actor.handle}`,
     {},
     {
       disabled,
@@ -35,9 +34,9 @@ export function UserWithHoverCard({
 
   const displayName =
     data?.user.displayName ??
-    ("displayName" in account ? account.displayName : undefined);
+    ("displayName" in actor ? actor.displayName : undefined);
   const handle =
-    data?.user.handle ?? ("handle" in account ? account.handle : undefined);
+    data?.user.handle ?? ("handle" in actor ? actor.handle : undefined);
   const displayNameOrHandle = displayName ?? handle;
 
   const initials = displayNameOrHandle
@@ -45,9 +44,9 @@ export function UserWithHoverCard({
     : undefined;
 
   const avatar =
-    data?.user.avatar ?? ("avatar" in account ? account.avatar : undefined);
+    data?.user.avatar ?? ("avatar" in actor ? actor.avatar : undefined);
 
-  account = data?.user ?? account;
+  actor = data?.user ?? actor;
 
   return (
     <HoverCard
@@ -64,10 +63,10 @@ export function UserWithHoverCard({
         {children}
       </HoverCardTrigger>
       <HoverCardContent className="relative">
-        {account.did && (
+        {actor.did && (
           <FollowButton
-            actorDid={account.did}
-            following={account.viewer?.following}
+            actorDid={actor.did}
+            following={actor.viewer?.following}
             className="absolute top-4 right-4"
           />
         )}
@@ -79,29 +78,29 @@ export function UserWithHoverCard({
           </Avatar>
 
           <div className="flex flex-col">
-            <span className="font-bold">{account.displayName}</span>
-            <span>@{account.handle}</span>
+            <span className="font-bold">{actor.displayName}</span>
+            <span>@{actor.handle}</span>
           </div>
 
           <div className="text-sm space-x-3">
-            {account.followersCount !== undefined && (
+            {actor.followersCount !== undefined && (
               <span>
-                {abbriviateNumber(account.followersCount)}
+                {abbriviateNumber(actor.followersCount)}
                 <span className="text-muted-foreground"> followers</span>
               </span>
             )}
 
-            {account.postsCount !== undefined && (
+            {actor.postsCount !== undefined && (
               <span>
-                {abbriviateNumber(account.postsCount)}
+                {abbriviateNumber(actor.postsCount)}
                 <span className="text-muted-foreground"> posts</span>
               </span>
             )}
           </div>
 
-          {account.description && (
+          {actor.description && (
             <p className="overflow-hidden text-ellipsis">
-              <AutoLinkText>{account.description}</AutoLinkText>
+              <AutoLinkText>{actor.description}</AutoLinkText>
             </p>
           )}
         </div>

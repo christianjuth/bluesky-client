@@ -1,5 +1,5 @@
-import { publicAgent } from "@/lib/atp-client";
-import { Profile } from "@/components/profile";
+import { publicAgent } from "@/lib/bsky/agent";
+import { Actor } from "@/components/actor";
 
 // The number of items that will be rendered initially
 // and live outside of the virtualized list. This allows
@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: { query: string } }) {
   return (
     <>
       {actors.data.actors?.map((actor) => (
-        <Profile key={actor.handle} profile={actor} />
+        <Actor key={actor.handle} actor={actor} />
       ))}
     </>
   );

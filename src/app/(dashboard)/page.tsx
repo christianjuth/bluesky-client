@@ -4,7 +4,7 @@ import {
   getFeedGenerator,
   getActorFeeds,
   getSavedFeeds,
-} from "@/lib/atp-client";
+} from "@/lib/bsky/agent";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";

@@ -7,7 +7,7 @@ import { feedGeneratorSchema } from "@/lib/schemas";
 import z from "zod";
 import Link from "next/link";
 import { HeartOutline } from "@/components/icons";
-import { SaveFeedButton } from "./save-feed.client";
+import { SaveFeedButton } from "./feed-save.client";
 
 export function FeedCard({
   feed,

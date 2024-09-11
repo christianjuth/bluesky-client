@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import { handleLike } from "./save-feed.server";
+import { handleLike } from "./feed-save.server";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Star, StarFill } from "@/components/icons";

@@ -9,11 +9,11 @@ import { Repost, ReplyOutlined } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
-import { LikeButton } from "./like-button.client";
+import { LikeButton } from "./post-like-button.client";
 import { AutoLinkText } from "./auto-link-text";
 import { getInitials } from "@/lib/format";
 import { TrackScroll } from "./track-scroll";
-import { UserWithHoverCard } from "./user-with-hover-card";
+import { ActorHoverCard } from "./actor-hover-card";
 import z from "zod";
 import { isLabledSexual } from "@/lib/bsky/utils";
 import { DismissableBlur } from "@/components/dismissable-blur";
@@ -88,11 +88,11 @@ function EmbededPost({ post }: { post: z.infer<typeof embedPostSchema> }) {
           <AvatarImage src={avatar} />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
-        <UserWithHoverCard account={post.author}>
+        <ActorHoverCard actor={post.author}>
           <Link href={routes.user(post.author.handle)}>
             {post.author.handle}
           </Link>
-        </UserWithHoverCard>
+        </ActorHoverCard>
         {createdAt && <RelativeTime time={createdAt} />}
       </div>
       <Link href={`/users/${post.author.handle}/posts/${id}`}>
@@ -341,7 +341,7 @@ export function Post({
         )}
         {/* Byline */}
         <div className="flex flex-row space-x-2 items-center text-sm">
-          <UserWithHoverCard account={post.author}>
+          <ActorHoverCard actor={post.author}>
             <Link
               href={routes.user(post.author.handle)}
               className="flex flex-row space-x-2 items-center"
@@ -352,7 +352,7 @@ export function Post({
               </Avatar>
               <span>{post.author.handle}</span>
             </Link>
-          </UserWithHoverCard>
+          </ActorHoverCard>
           {createdAt && <RelativeTime time={createdAt} />}
         </div>
         <div className="pl-8 space-y-3">

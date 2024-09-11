@@ -1,8 +1,8 @@
-import { FormItem } from "@/components/formitem";
+import { FormItem } from "@/components/form-item";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { agent } from "@/lib/atp-client";
+import { agent } from "@/lib/bsky/agent";
 import { zfd } from "zod-form-data";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

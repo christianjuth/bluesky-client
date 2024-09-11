@@ -28,7 +28,7 @@ const links = [
   },
 ] as const;
 
-export function ProfileNavbar({
+export function ActorNavbar({
   userId,
   isMyself,
 }: {

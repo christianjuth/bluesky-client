@@ -4,8 +4,8 @@ import {
   publicAgent,
   getMyLikedPosts,
   getFeed,
-} from "@/lib/atp-client";
-import { outputSchema } from "@/lib/schemas";
+} from "@/lib/bsky/agent";
+import { feedSchema } from "@/lib/schemas";
 import { type NextRequest, NextResponse } from "next/server";
 import { InferNextResponseJSON } from "@/lib/type-utils";
 import { type AtpAgent } from "@atproto/api";
@@ -42,7 +42,7 @@ async function getAuthorFeed(
   },
 ) {
   const res = await agent.getAuthorFeed(params);
-  return outputSchema.parse(res.data);
+  return feedSchema.parse(res.data);
 }
 
 async function getPosts(
@@ -57,7 +57,7 @@ async function getPosts(
     ...params,
     filter: "posts_no_replies",
   });
-  return outputSchema.parse(res.data);
+  return feedSchema.parse(res.data);
 }
 
 async function getReplies(
@@ -73,7 +73,7 @@ async function getReplies(
     filter: "posts_no_replies",
   });
   const filtered = res.data.feed.filter((p) => Boolean(p.reply));
-  return outputSchema.parse({
+  return feedSchema.parse({
     cursor: res.data.cursor,
     feed: filtered,
   });
@@ -87,7 +87,7 @@ async function getLikes(params: {
   const res = await getMyLikedPosts({
     ...params,
   });
-  return outputSchema.parse(
+  return feedSchema.parse(
     res
       ? {
           cursor: res.cursor,

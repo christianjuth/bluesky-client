@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { abbriviateNumber } from "@/lib/format";
-import { handleLike } from "./like-button.server";
+import { handleLike } from "./post-like-button.server";
 
 export function LikeButton({
   cid,

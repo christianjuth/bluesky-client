@@ -2,7 +2,7 @@ import LinkifyIt from "linkify-it";
 import Link from "next/link";
 import * as routes from "@/lib/routes";
 import tlds from "tlds";
-import { UserWithHoverCard } from "./user-with-hover-card";
+import { ActorHoverCard } from "./actor-hover-card";
 
 const linkify = new LinkifyIt();
 
@@ -71,11 +71,11 @@ export function AutoLinkText({ children }: { children: string }) {
       case "@":
         const handleWithoutAt = match.text.slice(1);
         output.push(
-          <UserWithHoverCard key={i} account={{ handle: handleWithoutAt }}>
+          <ActorHoverCard key={i} actor={{ handle: handleWithoutAt }}>
             <Link key={i} href={match.url} className="text-highlight">
               {match.text}
             </Link>
-          </UserWithHoverCard>,
+          </ActorHoverCard>,
         );
         break;
       case "#":

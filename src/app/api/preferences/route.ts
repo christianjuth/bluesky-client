@@ -1,4 +1,4 @@
-import { getSavedFeeds, getSession } from "@/lib/atp-client";
+import { getSavedFeeds, getSession } from "@/lib/bsky/agent";
 import { type NextRequest, NextResponse } from "next/server";
 import { InferNextResponseJSON } from "@/lib/type-utils";
 import z from "zod";

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as routes from "@/lib/routes";
-import { logout } from "./nav.server";
+import { logout } from "@/lib/bsky/server-actions";
 import { feedGeneratorSchema } from "@/lib/schemas";
 import z from "zod";
 import Image from "next/image";

@@ -1,5 +1,8 @@
 import { useId } from "react";
 
+/**
+ * Automatically handle id generation for label/input relationship.
+ */
 export function FormItem({
   children,
   label,

@@ -1,4 +1,4 @@
-import { agent, getSession, publicAgent } from "@/lib/atp-client";
+import { agent, getSession, publicAgent } from "@/lib/bsky/agent";
 import { accountSchema } from "@/lib/schemas";
 import { type NextRequest, NextResponse } from "next/server";
 import { InferNextResponseJSON } from "@/lib/type-utils";

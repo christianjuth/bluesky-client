@@ -12,6 +12,11 @@ import {
 
 dayjs.extend(relativeTime);
 
+/**
+ * Renders a relative time that updates every second.
+ * Does so in a way that won't break hydration.
+ * Shows the full date/time time on hover.
+ */
 export function RelativeTime({ time }: { time: string }) {
   const [relativeTime, setRelativeTime] = useState<string>(
     dayjs(time).format("MMM D, YYYY h:mma"),

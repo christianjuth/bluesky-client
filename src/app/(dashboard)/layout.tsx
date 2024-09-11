@@ -4,13 +4,13 @@ import {
   getPopularFeedGenerators,
   getSession,
   getSavedFeeds,
-} from "@/lib/atp-client";
+} from "@/lib/bsky/agent";
 import { BottomTabNavigator, Sidebar, Drawer } from "@/components/nav.client";
 import Link from "next/link";
 import { SearchBar } from "./search-bar.client";
 import * as routes from "@/lib/routes";
 import { Logo, BellOutline } from "@/components/icons";
-import { ActorAvatar } from "@/components/actor-avatar";
+import { ActorAvatar } from "@/components/actor";
 import { Button } from "@/components/ui/button";
 import { feedRequiresAuth } from "@/lib/bsky/utils";
 

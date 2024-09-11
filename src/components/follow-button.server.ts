@@ -1,9 +1,9 @@
 "use server";
 
-import { agent } from "@/lib/atp-client";
+import { agent } from "@/lib/bsky/agent";
 import { redirect } from "next/navigation";
 import * as routes from "@/lib/routes";
-import { getSession } from "@/lib/atp-client";
+import { getSession } from "@/lib/bsky/agent";
 
 export async function handleLike(state: {
   actorDid: string;

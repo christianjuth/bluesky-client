@@ -1,5 +1,5 @@
-import { agent, getSession, publicAgent } from "@/lib/atp-client";
-import { UserSidebar } from "@/components/user-sidebar";
+import { agent, getSession, publicAgent } from "@/lib/bsky/agent";
+import { ActorSidebar } from "@/components/actor-sidebar";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { PillNavbar } from "@/components/pill-navbar";
 import * as routes from "@/lib/routes";
@@ -13,7 +13,7 @@ export default async function Layout({
 }) {
   const session = await getSession();
 
-  const profile = await (session ? agent : publicAgent).getProfile({
+  const actor = await (session ? agent : publicAgent).getProfile({
     actor: params.userId,
   });
 
@@ -36,9 +36,9 @@ export default async function Layout({
         </div>
         {children}
       </>
-      <UserSidebar
+      <ActorSidebar
         isMyself={isMyself}
-        profile={profile.data}
+        actor={actor.data}
         className="max-md:-mx-4 max-md:rounded-none max-md:-mt-4 max-md:border-t-0"
       />
     </TemplateWithSidebar>

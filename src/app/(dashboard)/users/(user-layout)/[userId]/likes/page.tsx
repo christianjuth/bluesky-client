@@ -1,4 +1,4 @@
-import { getMyLikedPosts, getSession } from "@/lib/atp-client";
+import { getMyLikedPosts, getSession } from "@/lib/bsky/agent";
 import { Post } from "@/components/post";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { postsSchema } from "@/lib/schemas";

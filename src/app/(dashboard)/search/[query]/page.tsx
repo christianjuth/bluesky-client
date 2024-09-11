@@ -1,4 +1,4 @@
-import { searchPosts } from "@/lib/atp-client";
+import { searchPosts } from "@/lib/bsky/agent";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
 import { postsSchema } from "@/lib/schemas";

@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
+/**
+ * This is used to blur out NSFW content.
+ */
 export function DismissableBlur({
   className,
   label = "NSFW",

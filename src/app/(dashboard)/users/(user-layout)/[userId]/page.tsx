@@ -1,4 +1,4 @@
-import { agent, publicAgent, getSession } from "@/lib/atp-client";
+import { agent, publicAgent, getSession } from "@/lib/bsky/agent";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
 import { feedViewPostsSchema } from "@/lib/schemas";

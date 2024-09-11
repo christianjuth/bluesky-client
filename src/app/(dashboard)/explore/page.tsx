@@ -2,7 +2,7 @@ import {
   getPopularFeedGenerators,
   getSavedFeeds,
   getSession,
-} from "@/lib/atp-client";
+} from "@/lib/bsky/agent";
 import { FeedCard } from "@/components/feed-card";
 
 export default async function Page() {

@@ -1,9 +1,9 @@
-import { getSession, agent, publicAgent } from "@/lib/atp-client";
+import { getSession, agent, publicAgent } from "@/lib/bsky/agent";
 import { repliesSchema, postSchema } from "@/lib/schemas";
 import { VirtualizedPosts } from "@/components/virtualized-posts";
 import { Post } from "@/components/post";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
-import { UserSidebar } from "@/components/user-sidebar";
+import { ActorSidebar } from "@/components/actor-sidebar";
 import { ResetAboveThisPoint } from "@/components/track-scroll";
 
 // The number of items that will be rendered initially
@@ -18,7 +18,7 @@ export default async function Page({
 }) {
   const session = await getSession();
 
-  const [profile, post] = await Promise.all([
+  const [actor, post] = await Promise.all([
     publicAgent.getProfile({
       actor: params.userId,
     }),
@@ -49,7 +49,7 @@ export default async function Page({
         ))}
         <VirtualizedPosts defaultPosts={restReplies} />
       </>
-      <UserSidebar profile={profile.data} />
+      <ActorSidebar actor={actor.data} />
     </TemplateWithSidebar>
   );
 }

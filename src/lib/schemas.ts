@@ -155,7 +155,7 @@ export const feedViewPostSchema = z
 
 export const feedViewPostsSchema = z.array(feedViewPostSchema);
 
-export const outputSchema = z.object({
+export const feedSchema = z.object({
   feed: feedViewPostsSchema,
   cursor: z.string().optional(),
 });

@@ -4,11 +4,11 @@ import z from "zod";
 import { PostView } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 import { cache } from "react";
 import {
-  outputSchema,
+  feedSchema,
   feedGeneratorsSchema,
   feedGeneratorSchema,
   savedFeedsPrefSchema,
-} from "./schemas";
+} from "../schemas";
 
 /**
  * Disable caching for now to prevent Next.js from
@@ -303,7 +303,7 @@ export const getFeed = async ({
       cursor,
     },
   );
-  return outputSchema.parse(res.data);
+  return feedSchema.parse(res.data);
 };
 
 export function logout() {
