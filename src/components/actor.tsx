@@ -25,7 +25,7 @@ export function ActorAvatar({
   );
 }
 
-export function ActorByline({ actor }: { actor: ProfileView }) {
+function ActorByline({ actor }: { actor: ProfileView }) {
   const initials = getInitials(actor.displayName ?? actor.handle);
 
   const avatar = actor.avatar;
@@ -48,7 +48,7 @@ export function ActorByline({ actor }: { actor: ProfileView }) {
   );
 }
 
-export function ActorDescription({
+function ActorDescription({
   actor,
   className,
 }: {

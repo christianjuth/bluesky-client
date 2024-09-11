@@ -3,6 +3,7 @@ import { ActorSidebar } from "@/components/actor-sidebar";
 import { TemplateWithSidebar } from "@/components/template-with-sidebar";
 import { PillNavbar } from "@/components/pill-navbar";
 import * as routes from "@/lib/routes";
+import { userIsMyself } from "@/lib/bsky/utils.server";
 
 export default async function Layout({
   children,
@@ -17,7 +18,7 @@ export default async function Layout({
     actor: params.userId,
   });
 
-  const isMyself = session?.handle === params.userId;
+  const isMyself = await userIsMyself(actor.data.handle);
 
   const links = [
     { href: routes.user(params.userId), label: "Overview" },

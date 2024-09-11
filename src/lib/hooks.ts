@@ -39,7 +39,7 @@ export function useMutableSearchParams(options?: { debounce?: number }) {
         },
       };
     },
-    [searchParams, router, pathname],
+    [searchParams, router, pathname, deboucedHistoryReplace],
   );
 
   useEffect(() => {

@@ -10,16 +10,17 @@ function PrivateTrackScroll({
   id?: string;
   children: React.ReactNode;
 }) {
-  const searchParams = useMutableSearchParams();
+  const { mutate: spMutate, cancelUpdate: spCancelUpdate } =
+    useMutableSearchParams();
 
   const [isVisibile, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isVisibile && id) {
-      searchParams.mutate((sp) => sp.set("cursor", id)).shallowReplace();
+      spMutate((sp) => sp.set("cursor", id)).shallowReplace();
     }
-  }, [id, isVisibile, searchParams.mutate]);
+  }, [id, isVisibile, spMutate]);
 
   useEffect(() => {
     function handleScroll() {
@@ -34,14 +35,14 @@ function PrivateTrackScroll({
         if (newIsVisible && !isVisibile) {
           setIsVisible(true);
         } else if (!newIsVisible && isVisibile) {
-          searchParams.cancelUpdate();
+          spCancelUpdate();
           setIsVisible(false);
         }
       }
     }
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [id, searchParams.cancelUpdate, isVisibile]);
+  }, [id, spCancelUpdate, isVisibile]);
 
   return <div ref={ref}>{children}</div>;
 }
@@ -62,16 +63,17 @@ export function TrackScroll({
 
 function PrivateResetAboveThisPoint({ id }: { id?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const searchParams = useMutableSearchParams();
+  const { mutate: spMutate, cancelUpdate: spCancelUpdate } =
+    useMutableSearchParams();
   const [isVisibile, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (isVisibile) {
-      searchParams
-        .mutate((sp) => (id ? sp.set("cursor", id) : sp.delete("cursor")))
-        .shallowReplace();
+      spMutate((sp) =>
+        id ? sp.set("cursor", id) : sp.delete("cursor"),
+      ).shallowReplace();
     }
-  }, [isVisibile, searchParams.mutate, id]);
+  }, [isVisibile, spMutate, id]);
 
   useEffect(() => {
     function handleScroll() {
@@ -84,14 +86,14 @@ function PrivateResetAboveThisPoint({ id }: { id?: string }) {
         if (newIsVisible && !isVisibile) {
           setIsVisible(true);
         } else if (!newIsVisible && isVisibile) {
-          searchParams.cancelUpdate();
+          spCancelUpdate();
           setIsVisible(false);
         }
       }
     }
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isVisibile]);
+  }, [isVisibile, spCancelUpdate]);
 
   return <div ref={ref} />;
 }

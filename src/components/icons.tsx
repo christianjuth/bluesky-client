@@ -5,10 +5,6 @@
  */
 
 export { GoHome as HomeOutline, GoHomeFill as HomeFill } from "react-icons/go";
-export {
-  IoPersonCircleOutline as PersonCircleOutline,
-  IoPersonCircle as PersonCircleFill,
-} from "react-icons/io5";
 export { IoRepeatOutline as Repost } from "react-icons/io5";
 export {
   FaMessage as ReplyFilled,
@@ -23,8 +19,11 @@ export {
   IoIosHeartEmpty as HeartOutline,
   IoIosHeart as HeartFill,
 } from "react-icons/io";
+export {
+  AiOutlinePushpin as PinOutline,
+  AiFillPushpin as PinFill,
+} from "react-icons/ai";
 export { PiHash as Feed, PiHashFill as FeedFill } from "react-icons/pi";
 export { LuLogOut as LogOut } from "react-icons/lu";
 export { MdOutlineMenu as Menu } from "react-icons/md";
 export { GoBell as BellOutline } from "react-icons/go";
-export { GoStar as Star, GoStarFill as StarFill } from "react-icons/go";

@@ -122,40 +122,6 @@ export const getMyLikedPosts = async (params: {
   };
 };
 
-export const userIsMyself = async (userId: string) => {
-  const session = await getSession();
-  return session?.handle === userId || session?.did === userId;
-};
-
-export const randomTimeIntervalStabalizedString = (
-  stringRotationSeconds: number,
-  maxStringLength: number,
-) => {
-  const now = new Date();
-  const interval = Math.floor(now.getTime() / (stringRotationSeconds * 1000));
-
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  let index = 0;
-
-  let output = "";
-
-  let i = 0;
-
-  for (const number of interval.toString()) {
-    index += +number;
-    index = index % characters.length;
-    output += characters[index];
-    i++;
-    if (i >= maxStringLength) {
-      break;
-    }
-  }
-
-  return output;
-};
-
 export const searchPosts = async (params: { query: string; limit: number }) => {
   const res = await fetch(
     `https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=${params.query}`,
@@ -207,27 +173,6 @@ export const getPopularFeedGenerators = async (params: {
       // next: {
       //   revalidate: 60 * 60, // 1 hour
       // },
-      cache: "no-store",
-    },
-  );
-  const data = await res.json();
-  return feedGeneratorsSchema.parse(data);
-};
-
-export const actorFeeds = async (params: {
-  actor: string;
-  limit?: number;
-  cursor?: string;
-}) => {
-  const queryParams = new URLSearchParams();
-  queryParams.append("actor", params.actor);
-  queryParams.append("limit", String(params.limit ?? 20));
-  if (params.cursor) {
-    queryParams.append("cursor", params.cursor);
-  }
-  const res = await fetch(
-    `https://public.api.bsky.app/xrpc/app.bsky.feed.getActorFeeds?${queryParams.toString()}`,
-    {
       cache: "no-store",
     },
   );

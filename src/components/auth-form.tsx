@@ -12,7 +12,7 @@ const loginSchema = zfd.formData({
   password: zfd.text(),
 });
 
-export async function login(formData: FormData) {
+async function login(formData: FormData) {
   "use server";
 
   const { username, password } = loginSchema.parse(formData);

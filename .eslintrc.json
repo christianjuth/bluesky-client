@@ -1,3 +1,25 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "import/no-unused-modules": [1, { "unusedExports": true }]
+  },
+  "overrides": [
+    {
+      "files": [
+        "page.ts",
+        "page.tsx",
+        "route.ts",
+        "layout.tsx",
+        "error.ts",
+        "error.tsx",
+        "loading.ts",
+        "loading.tsx",
+        "src/components/ui/*.ts",
+        "src/components/ui/*.tsx"
+      ],
+      "rules": {
+        "import/no-unused-modules": ["off"]
+      }
+    }
+  ]
 }

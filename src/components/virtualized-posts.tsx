@@ -91,7 +91,7 @@ export function VirtualizedPosts({
   }
 
   useEffect(() => {
-    if (loadingMore && cursor && (actor || feed) && mode) {
+    if (loadingMore && cursor && (actor || feedUri) && mode) {
       let locked = false;
       const abortController = new AbortController();
 

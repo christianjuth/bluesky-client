@@ -4,7 +4,7 @@ import { useActionState, useEffect } from "react";
 import { handleLike } from "./feed-save.server";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Star, StarFill } from "@/components/icons";
+import { PinOutline, PinFill } from "@/components/icons";
 import { useRouter } from "next/navigation";
 
 export function SaveFeedButton({
@@ -16,7 +16,7 @@ export function SaveFeedButton({
   savedId?: string;
   className?: string;
 }) {
-  const router = useRouter();
+  const { refresh: routerRefresh } = useRouter();
 
   const [state, action] = useActionState(handleLike, {
     feedUri,
@@ -26,17 +26,17 @@ export function SaveFeedButton({
   const isInit = state.savedId === initSaveId;
   useEffect(() => {
     if (isInit) return;
-    router.refresh();
-  }, [isInit]);
+    routerRefresh();
+  }, [isInit, routerRefresh]);
 
   return (
     <form className="contents" action={action}>
       <Button
-        className={cn("flex items-center space-x-1 text-lg", className)}
+        className={cn("flex items-center space-x-1 text-xl", className)}
         size="icon"
         variant="ghost"
       >
-        {state.savedId ? <StarFill /> : <Star />}
+        {state.savedId ? <PinFill /> : <PinOutline />}
       </Button>
     </form>
   );

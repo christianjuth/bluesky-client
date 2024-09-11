@@ -1828,6 +1828,7 @@ __metadata:
     dayjs: "npm:^1.11.13"
     eslint: "npm:^8"
     eslint-config-next: "npm:14.2.7"
+    eslint-plugin-import: "npm:^2.30.0"
     husky: "npm:^9.1.5"
     linkify-it: "npm:^5.0.0"
     lint-staged: "npm:^15.2.10"
@@ -2609,7 +2610,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.28.1":
+"eslint-plugin-import@npm:^2.28.1, eslint-plugin-import@npm:^2.30.0":
   version: 2.30.0
   resolution: "eslint-plugin-import@npm:2.30.0"
   dependencies:
