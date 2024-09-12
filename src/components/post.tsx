@@ -4,7 +4,12 @@ import * as routes from "@/lib/routes";
 import { RelativeTime } from "./relative-time.client";
 import { cn } from "@/lib/utils";
 import { abbriviateNumber } from "@/lib/format";
-import { postSchema, embedPostSchema, externalEmbed } from "@/lib/schemas";
+import {
+  postSchema,
+  embedPostSchema,
+  externalEmbed,
+  postImageEmbedView,
+} from "@/lib/schemas";
 import { Repost, ReplyOutlined } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
@@ -17,40 +22,7 @@ import { ActorHoverCard } from "./actor-hover-card";
 import z from "zod";
 import { isLabledSexual } from "@/lib/bsky/utils";
 import { DismissableBlur } from "@/components/dismissable-blur";
-
-const imagesSchema = z.array(
-  z
-    .object({
-      thumb: z.string(),
-      fullsize: z.string(),
-      alt: z.string(),
-      aspectRatio: z.object({
-        height: z.number(),
-        width: z.number(),
-      }),
-    })
-    .strip(),
-);
-
-function parseImages(
-  images: unknown,
-): z.infer<typeof imagesSchema> | undefined {
-  try {
-    return imagesSchema.parse(images);
-  } catch (e) {
-    return undefined;
-  }
-}
-
-function parseEmbedPost(
-  embedRecord: unknown,
-): z.infer<typeof embedPostSchema> | undefined {
-  try {
-    return embedPostSchema.parse(embedRecord);
-  } catch (e) {
-    return undefined;
-  }
-}
+import { VideoPlayer } from "./video-player";
 
 const reasonRepost = z
   .object({
@@ -102,23 +74,42 @@ function EmbededPost({ post }: { post: z.infer<typeof embedPostSchema> }) {
         </p>
       </Link>
 
-      {post.embeds?.map(({ external }) =>
-        external ? (
-          <EmbedExternal external={external} key={external.uri} />
-        ) : null,
-      )}
+      {post.embeds?.map((embed) => {
+        switch (embed.$type) {
+          case "app.bsky.embed.external#view":
+            return (
+              <EmbedExternal
+                external={embed.external}
+                key={embed.external.uri}
+              />
+            );
+          case "app.bsky.embed.images#view":
+            return (
+              <Images images={embed.images} key={embed.images[0].fullsize} />
+            );
+          default:
+            return null;
+        }
+      })}
     </div>
   );
 }
 
-function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
+function Images({
+  images,
+}: {
+  images: z.infer<typeof postImageEmbedView>["images"];
+}) {
   if (images.length === 1) {
     const [img] = images;
+    const aspectRatio = img.aspectRatio
+      ? img.aspectRatio.width / img.aspectRatio.height
+      : 2 / 1;
     return (
       <div
         className="relative"
         style={{
-          aspectRatio: img.aspectRatio.width / img.aspectRatio.height,
+          aspectRatio,
         }}
       >
         <Image
@@ -126,7 +117,7 @@ function Images({ images }: { images: z.infer<typeof imagesSchema> }) {
           src={images[0].fullsize}
           alt={images[0].alt}
           fill
-          className="rounded-lg"
+          className="rounded-lg object-cover"
         />
       </div>
     );
@@ -320,10 +311,6 @@ export function Post({
       ? post.record.createdAt
       : undefined;
 
-  const images = parseImages(post.embed?.images);
-
-  const embedPost = parseEmbedPost(post.embed?.record);
-
   const reasonRepost = parseReasonRepost(reason);
 
   const id = post.uri.split("/").pop();
@@ -371,14 +358,22 @@ export function Post({
             {getPostBody(post)}
           </p>
 
-          {embedPost && <EmbededPost post={embedPost} />}
+          {post.embed.$type === "app.bsky.embed.record#view" && (
+            <EmbededPost post={post.embed.record} />
+          )}
 
-          {post.embed?.external && (
+          {post.embed.$type === "app.bsky.embed.external#view" && (
             <EmbedExternal external={post.embed.external} />
           )}
 
+          {post.embed.$type === "app.bsky.embed.video#view" && (
+            <VideoPlayer video={post.embed} />
+          )}
+
           <div className="relative">
-            {images && <Images images={images} />}
+            {post.embed.$type === "app.bsky.embed.images#view" && (
+              <Images images={post.embed.images} />
+            )}
             {isLabledSexual(post) && (
               <DismissableBlur className="absolute inset-0 rounded-md" />
             )}

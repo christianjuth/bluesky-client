@@ -1,4 +1,5 @@
 import z from "zod";
+import { PostView } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 
 export const accountSchema = z
   .object({
@@ -28,6 +29,46 @@ export const externalEmbed = z.object({
   thumb: z.string(),
 });
 
+const postExternalEmbedView = z
+  .object({
+    $type: z.literal("app.bsky.embed.external#view"),
+    external: externalEmbed,
+  })
+  .strip();
+
+export const postImageEmbedView = z.object({
+  $type: z.literal("app.bsky.embed.images#view"),
+  images: z.array(
+    z
+      .object({
+        thumb: z.string(),
+        fullsize: z.string(),
+        alt: z.string(),
+        aspectRatio: z
+          .object({
+            height: z.number(),
+            width: z.number(),
+          })
+          .optional(),
+      })
+      .strip(),
+  ),
+});
+
+export const postVideoEmbedView = z.object({
+  $type: z.literal("app.bsky.embed.video#view"),
+  cid: z.string(),
+  playlist: z.string(),
+  thumbnail: z.string().optional(),
+  alt: z.string().optional(),
+  aspectRatio: z
+    .object({
+      height: z.number(),
+      width: z.number(),
+    })
+    .optional(),
+});
+
 export const embedPostSchema = z.object({
   uri: z.string(),
   cid: z.string(),
@@ -45,11 +86,22 @@ export const embedPostSchema = z.object({
   indexedAt: z.string(),
   embeds: z
     .array(
-      z.object({
-        external: externalEmbed.optional().catch(() => undefined),
-      }),
+      z.discriminatedUnion("$type", [
+        postExternalEmbedView,
+        // postRecordEmbedView,
+        postImageEmbedView,
+        postVideoEmbedView,
+        z.object({
+          $type: z.literal("never"),
+        }),
+      ]),
     )
-    .optional(),
+    .catch(() => []),
+});
+
+const postRecordEmbedView = z.object({
+  $type: z.literal("app.bsky.embed.record#view"),
+  record: embedPostSchema,
 });
 
 export const postSchema = z
@@ -82,30 +134,16 @@ export const postSchema = z
       })
       .strip(),
     embed: z
-      .object({
-        $type: z.string().optional(),
-        images: z
-          .array(
-            z
-              .object({
-                thumb: z.string(),
-                fullsize: z.string(),
-                alt: z.string(),
-                aspectRatio: z
-                  .object({
-                    height: z.number(),
-                    width: z.number(),
-                  })
-                  .optional(),
-              })
-              .strip(),
-          )
-          .optional(),
-        record: embedPostSchema.optional().catch(() => undefined),
-        external: externalEmbed.optional().catch(() => undefined),
-      })
-      .strip()
-      .optional(),
+      .discriminatedUnion("$type", [
+        postExternalEmbedView,
+        postRecordEmbedView,
+        postImageEmbedView,
+        postVideoEmbedView,
+        z.object({
+          $type: z.literal("never"),
+        }),
+      ])
+      .catch(() => ({ $type: "never" as const })),
     replyCount: z.number().optional(),
     repostCount: z.number().optional(),
     likeCount: z.number().optional(),
