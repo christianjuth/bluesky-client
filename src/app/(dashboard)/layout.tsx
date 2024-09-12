@@ -13,6 +13,8 @@ import { Logo, BellOutline } from "@/components/icons";
 import { ActorAvatar } from "@/components/actor";
 import { Button } from "@/components/ui/button";
 import { feedRequiresAuth } from "@/lib/bsky/utils";
+import { VercelToolbar } from "@vercel/toolbar/next";
+import { env } from "@/env";
 
 function NotificationBell({ count }: { count: number }) {
   return (
@@ -63,55 +65,60 @@ export default async function Layout({
     : undefined;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur">
-        <Drawer
-          pinnedFeedGenerators={pinnedFeeds?.feeds}
-          feedGenerators={feedGenerators}
-          userId={user?.data?.handle}
-        />
+    <>
+      <div className="flex flex-col min-h-screen">
+        <div className="h-14 border-b flex flex-row items-center justify-between px-4 fixed top-0 inset-x-0 bg-background/70 z-20 backdrop-blur">
+          <Drawer
+            pinnedFeedGenerators={pinnedFeeds?.feeds}
+            feedGenerators={feedGenerators}
+            userId={user?.data?.handle}
+          />
 
-        <Link
-          href={routes.home}
-          className="md:flex-1 flex flex-row items-center space-x-0.5 mr-3"
-        >
-          <span className="font-black text-xl">BLUE</span>
-          <Logo className="text-2xl" />
-        </Link>
+          <Link
+            href={routes.home}
+            className="md:flex-1 flex flex-row items-center space-x-0.5 mr-3"
+          >
+            <span className="font-black text-xl">BLUE</span>
+            <Logo className="text-2xl" />
+          </Link>
 
-        <SearchBar />
+          <SearchBar />
 
-        <div className="md:flex-1 flex items-center justify-end ml-3">
-          {user?.data ? (
-            <>
-              {notifications?.data && (
-                <NotificationBell count={notifications.data.count} />
-              )}
-              <Link href={routes.user(user.data.handle)}>
-                <ActorAvatar actor={user.data} className="h-8 w-8" />
-              </Link>
-            </>
-          ) : (
-            <Button asChild size="sm">
-              <Link href={routes.auth}>Login</Link>
-            </Button>
-          )}
+          <div className="md:flex-1 flex items-center justify-end ml-3">
+            {user?.data ? (
+              <>
+                {notifications?.data && (
+                  <NotificationBell count={notifications.data.count} />
+                )}
+                <Link href={routes.user(user.data.handle)}>
+                  <ActorAvatar actor={user.data} className="h-8 w-8" />
+                </Link>
+              </>
+            ) : (
+              <Button asChild size="sm">
+                <Link href={routes.auth}>Login</Link>
+              </Button>
+            )}
+          </div>
         </div>
+
+        <div className="h-14" />
+
+        <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-6 max-md:hidden overflow-y-auto">
+          <Sidebar
+            pinnedFeedGenerators={pinnedFeeds?.feeds}
+            feedGenerators={feedGenerators}
+            userId={user?.data?.handle}
+          />
+        </aside>
+
+        <main className="w-full mx-auto md:pl-60">{children}</main>
+
+        <BottomTabNavigator />
       </div>
-
-      <div className="h-14" />
-
-      <aside className="fixed left-0 bottom-0 w-60 border-r top-14 p-6 max-md:hidden overflow-y-auto">
-        <Sidebar
-          pinnedFeedGenerators={pinnedFeeds?.feeds}
-          feedGenerators={feedGenerators}
-          userId={user?.data?.handle}
-        />
-      </aside>
-
-      <main className="w-full mx-auto md:pl-60">{children}</main>
-
-      <BottomTabNavigator />
-    </div>
+      {(session?.handle === env.ADMIN_HANDLE ||
+        env.NODE_ENV === "development") && <VercelToolbar />}
+      <VercelToolbar />
+    </>
   );
 }
