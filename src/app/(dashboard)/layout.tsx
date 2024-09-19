@@ -118,7 +118,6 @@ export default async function Layout({
       </div>
       {(session?.handle === env.ADMIN_HANDLE ||
         env.NODE_ENV === "development") && <VercelToolbar />}
-      <VercelToolbar />
     </>
   );
 }
